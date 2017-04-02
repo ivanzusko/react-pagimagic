@@ -1,25 +1,24 @@
 {
-  "name": "react-dropdowniz",
-  "version": "1.1.1",
-  "description": "Simple and minimalistic dropdown React component",
+  "name": "create-npm-package-starterkit",
+  "version": "0.0.1",
+  "description": "Simple starterkit for creating, upgrading and publishing your own npm package",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ivanzusko/react-dropdowniz.git"
+    "url": "https://github.com/ivanzusko/create-npm-package-starterkit.git"
   },
   "author": "Ivan Zusko <ivan.zusko@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanzusko/react-dropdowniz/issues"
+    "url": "https://github.com/ivanzusko/create-npm-package-starterkit/issues"
   },
-  "homepage": "https://github.com/ivanzusko/react-dropdowniz",
+  "homepage": "https://github.com/ivanzusko/create-npm-package-starterkit",
   "keywords": [
     "react",
     "react-component",
-    "dropdown",
-    "dropdown-component",
-    "react-dropdown",
-    "customizable",
-    "simple"
+    "npm",
+    "npm-package",
+    "starterkit",
+    "boilerplate"
   ],
   "scripts": {
     "prepublish": "npm run lint && npm run test && babel --plugins transform-es2015-modules-umd src --ignore __tests__ --out-dir ./dist",
