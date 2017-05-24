@@ -1,23 +1,25 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "react"], factory);
+    define(['exports', 'react', 'prop-types'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("react"));
+    factory(exports, require('react'), require('prop-types'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react);
+    factory(mod.exports, global.react, global.propTypes);
     global.index = mod.exports;
   }
-})(this, function (exports, _react) {
-  "use strict";
+})(this, function (exports, _react, _propTypes) {
+  'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
   var _react2 = _interopRequireDefault(_react);
+
+  var _propTypes2 = _interopRequireDefault(_propTypes);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
@@ -93,12 +95,12 @@
     }
 
     _createClass(YourComponent, [{
-      key: "render",
+      key: 'render',
       value: function render() {
         return _react2.default.createElement(
-          "div",
-          { className: "YourComponent-class" },
-          "Your Component as npm package"
+          'div',
+          { className: 'YourComponent-class' },
+          'Your Component as npm package'
         );
       }
     }]);
