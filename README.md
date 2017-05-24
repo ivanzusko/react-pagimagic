@@ -32,15 +32,14 @@ In `src/__tests__/index.test.js` create a test to be able to test your module an
 
 ## Publishing
 
-**NOTE!** Before publish your package, you need to build it from you source. In order to do it run `yarn prepublish` or `npm run prepublish` command.
-
 Run
 ```
 npm publish
 ```
+**NOTE!** After you run `npm publish` command it will run `prepublish` script at first and only then it will run `publish`. So you **don't need** to run `yarn prepublish` or `npm run prepublish` command manually.
 
 ## Maintaining
-After making some changes in your package, you need to publish the upgraded version to **[npmjs.org](https://npmjs.org)**.
+After making some changes in your package, you need to publish the upgraded version according to **[npmjs.org](https://npmjs.org)**.
 
 _**First of all**_, you need to rebuild your package by executing `yarn prepublish` or `npm run prepublish`
 
