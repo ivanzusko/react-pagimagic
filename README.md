@@ -41,7 +41,7 @@ npm publish
 ## Maintaining
 After making some changes in your package, you need to publish the upgraded version according to **[npmjs.org](https://npmjs.org)**.
 
-_**First of all**_, you need to rebuild your package by executing `yarn prepublish` or `npm run prepublish`
+_**First of all**_, make all necessary changes.
 
 _**Secondly**_, you need to commit your changes.
 
