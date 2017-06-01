@@ -26,6 +26,9 @@
     "lintfix": "eslint ./src --fix",
     "test": "jest"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "devDependencies": {
     "babel-cli": "^6.6.4",
     "babel-core": "^6.7.4",
@@ -41,9 +44,11 @@
     "eslint": "^2.7.0",
     "eslint-plugin-babel": "^3.1.0",
     "eslint-plugin-react": "^4.2.3",
+    "git-validate": "^2.2.2",
     "jest": "^20.0.4",
     "jsdom": "^8.1.0",
     "nodemon": "^1.9.1",
+    "precommit-hook": "^3.0.0",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-addons-test-utils": "^15.5.1",
