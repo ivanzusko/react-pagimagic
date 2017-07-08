@@ -1,30 +1,31 @@
 {
-  "name": "create-npm-package-starterkit",
-  "version": "1.0.0",
-  "description": "Simple starterkit for creating, upgrading and publishing your own npm package",
+  "name": "react-pagination",
+  "version": "0.0.1",
+  "description": "React component to create pagination from your list",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ivanzusko/create-npm-package-starterkit.git"
+    "url": "https://github.com/ivanzusko/react-pagination.git"
   },
   "author": "Ivan Zusko <ivan.zusko@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanzusko/create-npm-package-starterkit/issues"
+    "url": "https://github.com/ivanzusko/react-pagination/issues"
   },
-  "homepage": "https://github.com/ivanzusko/create-npm-package-starterkit",
+  "homepage": "https://github.com/ivanzusko/react-pagination",
   "keywords": [
+    "pagination",
     "react",
+    "react-pagination",
     "react-component",
     "npm",
-    "npm-package",
-    "starterkit",
-    "boilerplate"
+    "npm-package"
   ],
   "scripts": {
     "prepublish": "npm run lint && npm run test && babel --plugins transform-es2015-modules-umd src --ignore __tests__ --out-dir ./dist",
     "lint": "eslint ./src",
     "lintfix": "eslint ./src --fix",
-    "test": "jest"
+    "test": "jest",
+    "validate": "npm ls"
   },
   "pre-commit": [
     "lint"

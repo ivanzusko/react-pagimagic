@@ -9,7 +9,7 @@ describe('YourComponent', () => {
       const props = {};
       const wrapper = shallow(<YourComponent {...props} />);
 
-      expect(wrapper.find('.YourComponent-class').length).toBe(1);
+      expect(wrapper.find('.Paginator').length).toBe(1);
     });
   });
 });
