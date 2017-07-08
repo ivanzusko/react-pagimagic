@@ -13,11 +13,11 @@ const propTypes = {
   // render callback:
   renderChildren: PropTypes.func.isRequired,
   // custom arrow element/component (if not specified
-  // Paginator will render it's own <span>:
+  // Pagimagic will render it's own <span>:
   arrow: PropTypes.func,
 };
 
-class Paginator extends Component {
+class Pagimagic extends Component {
   constructor(props) {
     super(props);
 
@@ -67,7 +67,7 @@ class Paginator extends Component {
           display: 'inline-block',
           cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
         }}
-        className={`Paginator-nav-item Paginator-nav-item--${forward} ${disabled(direction)}`}
+        className={`Pagimagic-nav-item Pagimagic-nav-item--${forward} ${disabled(direction)}`}
         onClick={(e) => {
           callbackFn(e);
         }}
@@ -76,7 +76,7 @@ class Paginator extends Component {
           this.props.arrow ? 
           this.props.arrow() : 
           <span
-          className="Paginator-nav-arrow"
+          className="Pagimagic-nav-arrow"
           aria-hidden="true"
           >
             {forward}  
@@ -99,7 +99,7 @@ class Paginator extends Component {
     const endList = startList + itemsPerPage;
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
-    const className = props.className ? `Paginator ${props.className}` : 'Paginator';
+    const className = props.className ? `Pagimagic ${props.className}` : 'Pagimagic';
     const {
       currentPage,
       totalPaginators,
@@ -133,7 +133,7 @@ class Paginator extends Component {
         
         { renderChildren(visibleList(list)) }
         
-        <nav className="Paginator-nav">
+        <nav className="Pagimagic-nav">
 
           {
             totalPaginators > maxVisible &&
@@ -150,8 +150,8 @@ class Paginator extends Component {
                   }}
                   className={
                     currentPage === pageIndex
-                      ? 'Paginator-nav-item active'
-                      : 'Paginator-nav-item'
+                      ? 'Pagimagic-nav-item active'
+                      : 'Pagimagic-nav-item'
                   }
                 >
                   {pageIndex + 1}
@@ -170,6 +170,6 @@ class Paginator extends Component {
   }
 }
 
-Paginator.propTypes = propTypes;
+Pagimagic.propTypes = propTypes;
 
-export default Paginator;
+export default Pagimagic;

@@ -29,7 +29,7 @@ npm install react-pagimagic
 
 First of all you need to import it:
 ```javascript
-import Pagination from 'react-pagimagic';
+import Pagimagic from 'react-pagimagic';
 ```
 
 Than, let's assume there is a list of something, which should be splited on pages and paginated:
@@ -50,7 +50,7 @@ const YourComponent = (props) => {
   }
 
   return (
-    <Pagination
+    <Pagimagic
       list={users}
       itemsPerPage={10}
       currentPageIndex={0}
@@ -61,6 +61,37 @@ const YourComponent = (props) => {
   );
 }
 ```
+
+Also you can pass your own component which will play role of the arrows. Just pass it in the `arrow` property:
+
+```javascript
+// import from elsewhere:
+import MyArrowComponent from './somewhere/MyArrowComponent';
+// or create:
+const MyArrowComponent = () => <span>ARROW</span>;
+
+const YourComponent = (props) => {
+  ...
+
+  return (
+    <Pagimagic
+      ...
+      arrow={MyArrowComponent}
+    />
+  );
+}
+```
+
+And this is basically it. By default you will get list of items(your custom logic not related to Pagimagic) and ready-to-use pagination without styling, so you shouldn't think about overriding styles. Just apply any styles you like.
+
+Pagimagic will render following elements with such classes:
+- `.Pagimagic` for main wrapper (around list and pagination itself).
+- `.Pagimagic.your-className` for main wrapper, in case if you've passed your own class via `className` property.
+- `.Pagimagic-nav` for pagination navigation.
+- `.Pagimagic-nav-item` for pagination buttons.
+- - `.Pagimagic-nav-item active` for active pagination button.
+- - `.Pagimagic-nav-item--prev` and `.Pagimagic-nav-item--next` for _previous_ and _next_ arrows.
+- if you didn't pass a custom **arrow** to the `.Pagimagic`, then `span.Pagimagic-nav-arrow` will be rendered inside `.Pagimagic-nav-item--prev` and `.Pagimagic-nav-item--next`.
 
 ## License
 Licensed under [MIT](https://opensource.org/licenses/MIT) license.

@@ -84,12 +84,8 @@
     currentPageIndex: _propTypes2.default.number.isRequired,
     // how many(max) paginator buttons with numbers should be shown:
     maximumVisiblePaginators: _propTypes2.default.number.isRequired,
-    // function that should be called on paginator click
-    onChange: _propTypes2.default.func.isRequired,
     // render callback:
     renderChildren: _propTypes2.default.func.isRequired,
-    // additional className could be passed:
-    className: _propTypes2.default.string,
     // custom arrow element/component (if not specified
     // Paginator will render it's own <span>:
     arrow: _propTypes2.default.func

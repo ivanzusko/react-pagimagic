@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import Paginator from '../index';
+import Pagimagic from '../index';
 
 describe('YourComponent', () => {
   describe('#render', () => {
@@ -13,9 +13,9 @@ describe('YourComponent', () => {
         maximumVisiblePaginators: 3,
         renderChildren: jest.fn(),
       };
-      const wrapper = shallow(<Paginator {...props} />);
+      const wrapper = shallow(<Pagimagic {...props} />);
 
-      expect(wrapper.find('.Paginator').length).toBe(1);
+      expect(wrapper.find('.Pagimagic').length).toBe(1);
     });
   });
 });
