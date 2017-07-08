@@ -29,7 +29,7 @@ class Paginator extends Component {
   }
 
   goTo = pageIndex => {
-    this.setState(() => ({ currentPage: pageIndex }))
+    this.setState(() => ({ currentPage: pageIndex }));
   }
 
   onClickPrev = event => {
@@ -59,7 +59,7 @@ class Paginator extends Component {
         return (currentPage + 1) === totalPaginators ? 'disabled' : '';
       }
       return (currentPage === 0) ? 'disabled' : '';
-    }
+    };
 
     return (
       <div
@@ -69,7 +69,7 @@ class Paginator extends Component {
         }}
         className={`Paginator-nav-item Paginator-nav-item--${forward} ${disabled(direction)}`}
         onClick={(e) => {
-          callbackFn(e)
+          callbackFn(e);
         }}
       >
         {
@@ -115,11 +115,11 @@ class Paginator extends Component {
 
         return memo;
       }, []);
-    }
+    };
 
     const conditionToReturnIterator = (fn, total, max, skip) => {
-      return (total > max) ? fn(max, skip) : fn(total, skip)
-    }
+      return (total > max) ? fn(max, skip) : fn(total, skip);
+    };
 
     if (
       ((currentPage + 1) > maxVisible && currentPage < totalPaginators) || 
@@ -146,7 +146,7 @@ class Paginator extends Component {
                 <a
                   key={pageIndex}
                   onClick={() => {
-                    this.goTo(pageIndex)
+                    this.goTo(pageIndex);
                   }}
                   className={
                     currentPage === pageIndex
@@ -156,7 +156,7 @@ class Paginator extends Component {
                 >
                   {pageIndex + 1}
                 </a>
-              )
+              );
             })
           }
 
