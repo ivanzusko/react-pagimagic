@@ -10,12 +10,8 @@ const propTypes = {
   currentPageIndex: PropTypes.number.isRequired,
   // how many(max) paginator buttons with numbers should be shown:
   maximumVisiblePaginators: PropTypes.number.isRequired,
-  // function that should be called on paginator click
-  onChange: PropTypes.func.isRequired,
   // render callback:
   renderChildren: PropTypes.func.isRequired,
-  // additional className could be passed:
-  className: PropTypes.string,
   // custom arrow element/component (if not specified
   // Paginator will render it's own <span>:
   arrow: PropTypes.func,
@@ -33,7 +29,7 @@ class Paginator extends Component {
   }
 
   goTo = pageIndex => {
-    this.setState(() => ({ currentPage: pageIndex }));
+    this.setState(() => ({ currentPage: pageIndex }))
   }
 
   onClickPrev = event => {
@@ -63,7 +59,7 @@ class Paginator extends Component {
         return (currentPage + 1) === totalPaginators ? 'disabled' : '';
       }
       return (currentPage === 0) ? 'disabled' : '';
-    };
+    }
 
     return (
       <div
@@ -73,7 +69,7 @@ class Paginator extends Component {
         }}
         className={`Paginator-nav-item Paginator-nav-item--${forward} ${disabled(direction)}`}
         onClick={(e) => {
-          callbackFn(e);
+          callbackFn(e)
         }}
       >
         {
@@ -119,14 +115,14 @@ class Paginator extends Component {
 
         return memo;
       }, []);
-    };
+    }
 
     const conditionToReturnIterator = (fn, total, max, skip) => {
-      return (total > max) ? fn(max, skip) : fn(total, skip);
-    };
+      return (total > max) ? fn(max, skip) : fn(total, skip)
+    }
 
     if (
-      ((currentPage+1) > maxVisible && currentPage < totalPaginators) || 
+      ((currentPage + 1) > maxVisible && currentPage < totalPaginators) || 
       ((currentPage + 1) === totalPaginators)
     ) {
       skip = (currentPage + 1) - maxVisible;
@@ -150,7 +146,7 @@ class Paginator extends Component {
                 <a
                   key={pageIndex}
                   onClick={() => {
-                    this.goTo(pageIndex);
+                    this.goTo(pageIndex)
                   }}
                   className={
                     currentPage === pageIndex
@@ -160,7 +156,7 @@ class Paginator extends Component {
                 >
                   {pageIndex + 1}
                 </a>
-              );
+              )
             })
           }
 
