@@ -14,6 +14,8 @@ const propTypes = {
   onChange: PropTypes.func.isRequired,
   // render callback:
   renderChildren: PropTypes.func.isRequired,
+  // additional className could be passed:
+  className: PropTypes.string,
   // custom arrow element/component (if not specified
   // Paginator will render it's own <span>:
   arrow: PropTypes.func,

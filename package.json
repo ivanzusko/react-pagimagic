@@ -1,21 +1,22 @@
 {
-  "name": "react-pagination",
+  "name": "react-pagimagic",
   "version": "0.0.1",
   "description": "React component to create pagination from your list",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ivanzusko/react-pagination.git"
+    "url": "https://github.com/ivanzusko/react-pagimagic.git"
   },
   "author": "Ivan Zusko <ivan.zusko@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanzusko/react-pagination/issues"
+    "url": "https://github.com/ivanzusko/react-pagimagic/issues"
   },
-  "homepage": "https://github.com/ivanzusko/react-pagination",
+  "homepage": "https://github.com/ivanzusko/react-pagimagic",
   "keywords": [
     "pagination",
     "react",
     "react-pagination",
+    "react-pagimagic",
     "react-component",
     "npm",
     "npm-package"

@@ -75,40 +75,178 @@
     if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   }
 
-  var propTypes = {};
+  var propTypes = {
+    // list of items
+    list: _propTypes2.default.array.isRequired,
+    // how many items will be shown on one page
+    itemsPerPage: _propTypes2.default.number.isRequired,
+    // index of the current page
+    currentPageIndex: _propTypes2.default.number.isRequired,
+    // how many(max) paginator buttons with numbers should be shown:
+    maximumVisiblePaginators: _propTypes2.default.number.isRequired,
+    // function that should be called on paginator click
+    onChange: _propTypes2.default.func.isRequired,
+    // render callback:
+    renderChildren: _propTypes2.default.func.isRequired,
+    // additional className could be passed:
+    className: _propTypes2.default.string,
+    // custom arrow element/component (if not specified
+    // Paginator will render it's own <span>:
+    arrow: _propTypes2.default.func
+  };
 
-  var YourComponent = function (_Component) {
-    _inherits(YourComponent, _Component);
+  var Paginator = function (_Component) {
+    _inherits(Paginator, _Component);
 
-    function YourComponent() {
-      var _ref;
+    function Paginator(props) {
+      _classCallCheck(this, Paginator);
 
-      var _temp, _this, _ret;
+      var _this = _possibleConstructorReturn(this, (Paginator.__proto__ || Object.getPrototypeOf(Paginator)).call(this, props));
 
-      _classCallCheck(this, YourComponent);
+      _this.goTo = function (pageIndex) {
+        _this.setState(function () {
+          return { currentPage: pageIndex };
+        });
+      };
 
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
+      _this.onClickPrev = function (event) {
+        event.preventDefault();
 
-      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = YourComponent.__proto__ || Object.getPrototypeOf(YourComponent)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _temp), _possibleConstructorReturn(_this, _ret);
-    }
+        var currentPage = _this.state.currentPage;
 
-    _createClass(YourComponent, [{
-      key: 'render',
-      value: function render() {
+
+        if (currentPage > 0) {
+          _this.goTo(currentPage - 1);
+        }
+      };
+
+      _this.onClickNext = function (event) {
+        event.preventDefault();
+
+        var _this$state = _this.state,
+            currentPage = _this$state.currentPage,
+            totalPaginators = _this$state.totalPaginators;
+
+
+        if (currentPage + 1 < totalPaginators) {
+          _this.goTo(currentPage + 1);
+        }
+      };
+
+      _this.renderPrevNextButtons = function (currentPage, totalPaginators, callbackFn, direction) {
+        var forward = direction === 'next' ? 'next' : 'prev';
+        var disabled = function disabled(direction) {
+          if (direction === 'next') {
+            return currentPage + 1 === totalPaginators ? 'disabled' : '';
+          }
+          return currentPage === 0 ? 'disabled' : '';
+        };
+
         return _react2.default.createElement(
           'div',
-          { className: 'YourComponent-class' },
-          'Your Component as npm package'
+          {
+            style: {
+              display: 'inline-block',
+              cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer'
+            },
+            className: 'Paginator-nav-item Paginator-nav-item--' + forward + ' ' + disabled(direction),
+            onClick: function onClick(e) {
+              callbackFn(e);
+            }
+          },
+          _this.props.arrow ? _this.props.arrow() : _react2.default.createElement(
+            'span',
+            {
+              className: 'Paginator-nav-arrow',
+              'aria-hidden': 'true'
+            },
+            forward
+          )
+        );
+      };
+
+      _this.state = {
+        currentPage: _this.props.currentPageIndex,
+        list: _this.props.list,
+        totalPaginators: Math.ceil(_this.props.list.length / _this.props.itemsPerPage)
+      };
+      return _this;
+    }
+
+    _createClass(Paginator, [{
+      key: 'render',
+      value: function render() {
+        var _this2 = this;
+
+        var props = this.props;
+        var itemsPerPage = props.itemsPerPage,
+            maximumVisiblePaginators = props.maximumVisiblePaginators,
+            renderChildren = props.renderChildren;
+
+        // where should splice starts
+        var startList = this.state.currentPage * itemsPerPage;
+        // where should splice ends
+        var endList = startList + itemsPerPage;
+        // elements which should to be shown
+        var visibleList = function visibleList(targetList) {
+          return targetList.slice(startList, endList);
+        };
+        var className = props.className ? 'Paginator ' + props.className : 'Paginator';
+        var _state = this.state,
+            currentPage = _state.currentPage,
+            totalPaginators = _state.totalPaginators,
+            list = _state.list;
+
+        var maxVisible = totalPaginators > maximumVisiblePaginators ? maximumVisiblePaginators : totalPaginators;
+        var skip = 0;
+
+        var createIterator = function createIterator(amount, skip) {
+          return Array.apply(null, Array(amount)).reduce(function (memo, item, i) {
+            memo.push(skip + i);
+
+            return memo;
+          }, []);
+        };
+
+        var conditionToReturnIterator = function conditionToReturnIterator(fn, total, max, skip) {
+          return total > max ? fn(max, skip) : fn(total, skip);
+        };
+
+        if (currentPage + 1 > maxVisible && currentPage < totalPaginators || currentPage + 1 === totalPaginators) {
+          skip = currentPage + 1 - maxVisible;
+        }
+
+        return _react2.default.createElement(
+          'div',
+          { className: className },
+          renderChildren(visibleList(list)),
+          _react2.default.createElement(
+            'nav',
+            { className: 'Paginator-nav' },
+            totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickPrev),
+            conditionToReturnIterator(createIterator, totalPaginators, maxVisible, skip).map(function (pageIndex) {
+              return _react2.default.createElement(
+                'a',
+                {
+                  key: pageIndex,
+                  onClick: function onClick() {
+                    _this2.goTo(pageIndex);
+                  },
+                  className: currentPage === pageIndex ? 'Paginator-nav-item active' : 'Paginator-nav-item'
+                },
+                pageIndex + 1
+              );
+            }),
+            totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickNext, 'next')
+          )
         );
       }
     }]);
 
-    return YourComponent;
+    return Paginator;
   }(_react.Component);
 
-  YourComponent.propTypes = propTypes;
+  Paginator.propTypes = propTypes;
 
-  exports.default = YourComponent;
+  exports.default = Paginator;
 });
