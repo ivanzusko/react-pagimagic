@@ -2,6 +2,15 @@
 
 If you want to create your own __npm__ package, here is one simple way.
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/react-pagimagic" target="_blank"><img src="https://img.shields.io/npm/v/react-pagimagic.svg"></a>
+  <a href="https://travis-ci.org/ivanzusko/react-pagimagic" target="_blank">
+    <img src="https://travis-ci.org/ivanzusko/react-pagimagic.svg?branch=master" alt="travis-web"/>
+  </a>
+  <img src="https://img.shields.io/npm/dt/react-pagimagic.svg" alt="total downloads" />
+  <a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/npm/l/react-pagimagic.svg"></a>
+</p>
+
 ## Installation
 
 Just run:
