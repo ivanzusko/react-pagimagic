@@ -11,7 +11,6 @@ describe('YourComponent', () => {
         itemsPerPage: 2,
         currentPageIndex: 0,
         maximumVisiblePaginators: 3,
-        onChange: jest.fn(),
         renderChildren: jest.fn(),
       };
       const wrapper = shallow(<Paginator {...props} />);
