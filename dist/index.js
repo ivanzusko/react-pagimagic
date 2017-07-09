@@ -87,17 +87,17 @@
     // render callback:
     renderChildren: _propTypes2.default.func.isRequired,
     // custom arrow element/component (if not specified
-    // Paginator will render it's own <span>:
+    // Pagimagic will render it's own <span>:
     arrow: _propTypes2.default.func
   };
 
-  var Paginator = function (_Component) {
-    _inherits(Paginator, _Component);
+  var Pagimagic = function (_Component) {
+    _inherits(Pagimagic, _Component);
 
-    function Paginator(props) {
-      _classCallCheck(this, Paginator);
+    function Pagimagic(props) {
+      _classCallCheck(this, Pagimagic);
 
-      var _this = _possibleConstructorReturn(this, (Paginator.__proto__ || Object.getPrototypeOf(Paginator)).call(this, props));
+      var _this = _possibleConstructorReturn(this, (Pagimagic.__proto__ || Object.getPrototypeOf(Pagimagic)).call(this, props));
 
       _this.goTo = function (pageIndex) {
         _this.setState(function () {
@@ -145,7 +145,7 @@
               display: 'inline-block',
               cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer'
             },
-            className: 'Paginator-nav-item Paginator-nav-item--' + forward + ' ' + disabled(direction),
+            className: 'Pagimagic-nav-item Pagimagic-nav-item--' + forward + ' ' + disabled(direction),
             onClick: function onClick(e) {
               callbackFn(e);
             }
@@ -153,7 +153,7 @@
           _this.props.arrow ? _this.props.arrow() : _react2.default.createElement(
             'span',
             {
-              className: 'Paginator-nav-arrow',
+              className: 'Pagimagic-nav-arrow',
               'aria-hidden': 'true'
             },
             forward
@@ -169,7 +169,7 @@
       return _this;
     }
 
-    _createClass(Paginator, [{
+    _createClass(Pagimagic, [{
       key: 'render',
       value: function render() {
         var _this2 = this;
@@ -187,7 +187,7 @@
         var visibleList = function visibleList(targetList) {
           return targetList.slice(startList, endList);
         };
-        var className = props.className ? 'Paginator ' + props.className : 'Paginator';
+        var className = props.className ? 'Pagimagic ' + props.className : 'Pagimagic';
         var _state = this.state,
             currentPage = _state.currentPage,
             totalPaginators = _state.totalPaginators,
@@ -218,7 +218,7 @@
           renderChildren(visibleList(list)),
           _react2.default.createElement(
             'nav',
-            { className: 'Paginator-nav' },
+            { className: 'Pagimagic-nav' },
             totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickPrev),
             conditionToReturnIterator(createIterator, totalPaginators, maxVisible, skip).map(function (pageIndex) {
               return _react2.default.createElement(
@@ -228,7 +228,7 @@
                   onClick: function onClick() {
                     _this2.goTo(pageIndex);
                   },
-                  className: currentPage === pageIndex ? 'Paginator-nav-item active' : 'Paginator-nav-item'
+                  className: currentPage === pageIndex ? 'Pagimagic-nav-item active' : 'Pagimagic-nav-item'
                 },
                 pageIndex + 1
               );
@@ -239,10 +239,10 @@
       }
     }]);
 
-    return Paginator;
+    return Pagimagic;
   }(_react.Component);
 
-  Paginator.propTypes = propTypes;
+  Pagimagic.propTypes = propTypes;
 
-  exports.default = Paginator;
+  exports.default = Pagimagic;
 });

@@ -1,6 +1,6 @@
 # React component to create **pagination** from your list
 
-If you want to create your own __npm__ package, here is one simple way.
+Here is available a short [Demo](https://codesandbox.io/embed/n5g6xQ6qE).
 
 <p align="center">
   <a href="https://www.npmjs.com/package/react-pagimagic" target="_blank"><img src="https://img.shields.io/npm/v/react-pagimagic.svg"></a>
@@ -103,6 +103,9 @@ Property | Type | isRequired | Default value | Description
 `renderChildren` | Function | yes | - | The way how your list should be build. `Pagimagic` will display your list acording to your logic, and will handle only pagination computation and creation.
 `className` | String | no | `Pagimagic` | If you want to have aditionaly your className.
 `arrow` | Function | no | `span.Pagimagic-nav-arrow` | By default the `span` will be rendered inside the `div.Pagimagic-nav-item--prev` and `div.Pagimagic-nav-item--prev` with text **prev** and **next** respectively.
+
+## Demo
+[https://codesandbox.io/embed/n5g6xQ6qE](https://codesandbox.io/embed/n5g6xQ6qE)
 
 ## License
 Licensed under [MIT](https://opensource.org/licenses/MIT) license.
