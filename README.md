@@ -93,5 +93,16 @@ Pagimagic will render following elements with such classes:
 - - `.Pagimagic-nav-item--prev` and `.Pagimagic-nav-item--next` for _previous_ and _next_ arrows.
 - if you didn't pass a custom **arrow** to the `.Pagimagic`, then `span.Pagimagic-nav-arrow` will be rendered inside `.Pagimagic-nav-item--prev` and `.Pagimagic-nav-item--next`.
 
+## More info
+Property | Type | isRequired | Default value | Description
+:---|:---|:---|:---|:---
+`list` | Array<any> | yes | - | You need to pass an array with elements, so Pagimagic will know, how many pages and pagination buttons build.
+`itemsPerPage` | Number | yes | - | How many elements will be shown on one page.
+`currentPageIndex` | Number | yes | - | Index of the page which is shown initialy.
+`maximumVisiblePaginators` | Number | yes | - | How many pagination buttons should be displayed. **E.g.:** there are 10 pages, and `maximumVisiblePaginators` is set to 3, so there will be shown only 3 pagination buttons + arrow prev and arrow next, and 7 pagination buttons will be hidden.
+`renderChildren` | Function | yes | - | The way how your list should be build. `Pagimagic` will display your list acording to your logic, and will handle only pagination computation and creation.
+`className` | String | no | `Pagimagic` | If you want to have aditionaly your className.
+`arrow` | Function | no | `span.Pagimagic-nav-arrow` | By default the `span` will be rendered inside the `div.Pagimagic-nav-item--prev` and `div.Pagimagic-nav-item--prev` with text **prev** and **next** respectively.
+
 ## License
 Licensed under [MIT](https://opensource.org/licenses/MIT) license.
