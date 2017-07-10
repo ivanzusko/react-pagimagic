@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import DefaultArrow from './DefaultArrow';
-import './defaultStyles.css';
 
 const propTypes = {
   // list of items
@@ -18,8 +17,12 @@ const propTypes = {
   // custom arrow element/component (if not specified
   // Pagimagic will render it's own <span>:
   arrow: PropTypes.func,
-  // if you don't have specify/apply your own styles:
+  // if you don't want to specify/apply your own styles:
   useDefaultStyles: PropTypes.bool,
+};
+
+const styles = {
+  nav: () => ({})
 };
 
 class Pagimagic extends Component {
@@ -29,95 +32,103 @@ class Pagimagic extends Component {
     this.state = {
       currentPage: this.props.currentPageIndex,
       list: this.props.list,
-      totalPaginators: Math.ceil(this.props.list.length / this.props.itemsPerPage),
+      totalPaginators: Math.ceil(
+        this.props.list.length / this.props.itemsPerPage
+      )
     };
   }
 
   goTo = pageIndex => {
     this.setState(() => ({ currentPage: pageIndex }));
-  }
+  };
 
   onClickPrev = event => {
     event.preventDefault();
 
     const { currentPage } = this.state;
-    
+
     if (currentPage > 0) {
       this.goTo(currentPage - 1);
     }
-  }
+  };
 
   onClickNext = event => {
     event.preventDefault();
 
     const { currentPage, totalPaginators } = this.state;
 
-    if ((currentPage + 1) < totalPaginators) {
+    if (currentPage + 1 < totalPaginators) {
       this.goTo(currentPage + 1);
     }
-  }
+  };
 
-  renderPrevNextButtons = (currentPage, totalPaginators, callbackFn, direction) => {
+  renderPrevNextButtons = (
+    currentPage,
+    totalPaginators,
+    callbackFn,
+    direction
+  ) => {
     const forward = direction === 'next' ? 'next' : 'prev';
     const disabled = direction => {
       if (direction === 'next') {
-        return (currentPage + 1) === totalPaginators ? 'disabled' : '';
+        return currentPage + 1 === totalPaginators ? 'disabled' : '';
       }
-      return (currentPage === 0) ? 'disabled' : '';
+      return currentPage === 0 ? 'disabled' : '';
     };
 
     return (
       <div
-        style={{
-          display: 'inline-block',
-          cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
-        }}
+        style={
+          this.props.useDefaultStyles
+            ? {
+              display: 'inline-block',
+              cursor:
+                  disabled(direction) === 'disabled'
+                    ? 'not-allowed'
+                    : 'pointer',
+              position: 'relative',
+              verticalAlign: 'middle',
+              width: '50px',
+              height: '50px',
+              opacity: disabled(direction) === 'disabled' ? '.3' : 1
+            }
+            : {
+              display: 'inline-block',
+              cursor:
+                  disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer'
+            }
+        }
         className={`Pagimagic-nav-item Pagimagic-nav-item--${forward} ${disabled(direction)}`}
-        onClick={(e) => {
+        onClick={e => {
           callbackFn(e);
         }}
       >
-        {
-          this.props.arrow ? 
-          this.props.arrow() : (
-            this.props.useDefaultStyles ? 
-            <DefaultArrow 
-              next={forward === 'next'}
-            /> :
-            <span
-            className="Pagimagic-nav-arrow"
-            aria-hidden="true"
-            >
-              {forward}  
-            </span>
-          )
-        }
+        {this.props.arrow
+          ? this.props.arrow()
+          : this.props.useDefaultStyles
+            ? <DefaultArrow next={forward === 'next'} />
+            : <span className="Pagimagic-nav-arrow" aria-hidden="true">
+                {forward}
+              </span>}
       </div>
     );
-  }
+  };
 
   render() {
     const props = this.props;
-    const {
-      itemsPerPage,
-      maximumVisiblePaginators,
-      renderChildren,
-    } = props;
+    const { itemsPerPage, maximumVisiblePaginators, renderChildren } = props;
     // where should splice starts
     const startList = this.state.currentPage * itemsPerPage;
     // where should splice ends
     const endList = startList + itemsPerPage;
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
-    const initialClassName = props.className ? `Pagimagic ${props.className}` : 'Pagimagic Pagimagic-default';
-    const className = props.useDefaultStyles ? `${initialClassName} Pagimagic-default` : initialClassName;
-    const {
-      currentPage,
-      totalPaginators,
-      list,
-    } = this.state;
+    const className = props.className ? `Pagimagic ${props.className}` : 'Pagimagic';
+    const { currentPage, totalPaginators, list } = this.state;
     const maxVisible =
-      totalPaginators > maximumVisiblePaginators ? maximumVisiblePaginators : totalPaginators;
+      totalPaginators > maximumVisiblePaginators
+        ? maximumVisiblePaginators
+        : totalPaginators;
     let skip = 0;
 
     const createIterator = (amount, skip) => {
@@ -129,33 +140,57 @@ class Pagimagic extends Component {
     };
 
     const conditionToReturnIterator = (fn, total, max, skip) => {
-      return (total > max) ? fn(max, skip) : fn(total, skip);
+      return total > max ? fn(max, skip) : fn(total, skip);
     };
 
     if (
-      ((currentPage + 1) > maxVisible && currentPage < totalPaginators) || 
-      ((currentPage + 1) === totalPaginators)
+      (currentPage + 1 > maxVisible && currentPage < totalPaginators) ||
+      currentPage + 1 === totalPaginators
     ) {
-      skip = (currentPage + 1) - maxVisible;
+      skip = currentPage + 1 - maxVisible;
     }
 
     return (
       <div className={className}>
-        
-        { renderChildren(visibleList(list)) }
-        
-        <nav className="Pagimagic-nav">
+        {renderChildren(visibleList(list))}
 
+        <nav className="Pagimagic-nav">
           {
             totalPaginators > maxVisible &&
-              this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickPrev)              
+              this.renderPrevNextButtons(
+                currentPage,
+                totalPaginators,
+                this.onClickPrev
+              )
           }
 
           {
-            conditionToReturnIterator(createIterator, totalPaginators, maxVisible, skip).map(pageIndex => {
+            conditionToReturnIterator(
+              createIterator,
+              totalPaginators,
+              maxVisible,
+              skip
+            ).map(pageIndex => {
               return (
                 <a
                   key={pageIndex}
+                  style={
+                    this.props.useDefaultStyles
+                      ? {
+                        display: 'inline-block',
+                        verticalAlign: 'middle',
+                        lineHeight: '50px',
+                        width: '50px',
+                        height: '50px',
+                        border: 'solid 1px #000',
+                        borderRadius: '3px',
+                        margin: '0 5px',
+                        backgroundColor:
+                            currentPage === pageIndex ? '#000' : '#fff',
+                        color: currentPage === pageIndex ? '#fff' : '#000'
+                      }
+                      : {}
+                  }
                   onClick={() => {
                     this.goTo(pageIndex);
                   }}
@@ -173,7 +208,12 @@ class Pagimagic extends Component {
 
           {
             totalPaginators > maxVisible &&
-              this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickNext, 'next')              
+              this.renderPrevNextButtons(
+                currentPage,
+                totalPaginators,
+                this.onClickNext,
+                'next'
+              )
           }
         </nav>
       </div>
