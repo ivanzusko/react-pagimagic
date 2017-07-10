@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['exports', 'react', 'prop-types'], factory);
+    define(['exports', 'react', 'prop-types', './DefaultArrow'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('react'), require('prop-types'));
+    factory(exports, require('react'), require('prop-types'), require('./DefaultArrow'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react, global.propTypes);
+    factory(mod.exports, global.react, global.propTypes, global.DefaultArrow);
     global.index = mod.exports;
   }
-})(this, function (exports, _react, _propTypes) {
+})(this, function (exports, _react, _propTypes, _DefaultArrow) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -20,6 +20,8 @@
   var _react2 = _interopRequireDefault(_react);
 
   var _propTypes2 = _interopRequireDefault(_propTypes);
+
+  var _DefaultArrow2 = _interopRequireDefault(_DefaultArrow);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
@@ -88,7 +90,15 @@
     renderChildren: _propTypes2.default.func.isRequired,
     // custom arrow element/component (if not specified
     // Pagimagic will render it's own <span>:
-    arrow: _propTypes2.default.func
+    arrow: _propTypes2.default.func,
+    // if you don't want to specify/apply your own styles:
+    useDefaultStyles: _propTypes2.default.bool
+  };
+
+  var styles = {
+    nav: function nav() {
+      return {};
+    }
   };
 
   var Pagimagic = function (_Component) {
@@ -141,7 +151,15 @@
         return _react2.default.createElement(
           'div',
           {
-            style: {
+            style: _this.props.useDefaultStyles ? {
+              display: 'inline-block',
+              cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
+              position: 'relative',
+              verticalAlign: 'middle',
+              width: '50px',
+              height: '50px',
+              opacity: disabled(direction) === 'disabled' ? '.3' : 1
+            } : {
               display: 'inline-block',
               cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer'
             },
@@ -150,12 +168,9 @@
               callbackFn(e);
             }
           },
-          _this.props.arrow ? _this.props.arrow() : _react2.default.createElement(
+          _this.props.arrow ? _this.props.arrow() : _this.props.useDefaultStyles ? _react2.default.createElement(_DefaultArrow2.default, { next: forward === 'next' }) : _react2.default.createElement(
             'span',
-            {
-              className: 'Pagimagic-nav-arrow',
-              'aria-hidden': 'true'
-            },
+            { className: 'Pagimagic-nav-arrow', 'aria-hidden': 'true' },
             forward
           )
         );
@@ -225,6 +240,18 @@
                 'a',
                 {
                   key: pageIndex,
+                  style: _this2.props.useDefaultStyles ? {
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                    lineHeight: '50px',
+                    width: '50px',
+                    height: '50px',
+                    border: 'solid 1px #000',
+                    borderRadius: '3px',
+                    margin: '0 5px',
+                    backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
+                    color: currentPage === pageIndex ? '#fff' : '#000'
+                  } : {},
                   onClick: function onClick() {
                     _this2.goTo(pageIndex);
                   },
