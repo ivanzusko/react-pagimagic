@@ -85,11 +85,6 @@ const YourComponent = (props) => {
 Also you can use very primitive default styles by passing `useDefaultStyles` property:
 
 ```javascript
-// import from elsewhere:
-import MyArrowComponent from './somewhere/MyArrowComponent';
-// or create:
-const MyArrowComponent = () => <span>ARROW</span>;
-
 const YourComponent = (props) => {
   ...
 
