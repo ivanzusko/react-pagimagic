@@ -31,7 +31,7 @@
         position: 'absolute',
         display: 'inline-block',
         width: '50px',
-        heigth: '50px',
+        height: '50px',
         top: 0,
         left: 0,
         transform: next ? 'none' : 'rotate(-180deg)'
