@@ -1,0 +1,39 @@
+.Pagimagic-default .Pagimagic-nav-item {
+  display: inline-block;
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  margin-left: 5px;
+  margin-right: 5px;
+  line-height: 50px;
+  border: solid 1px #000;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.Pagimagic-default .Pagimagic-nav-item.active {
+  background-color: #000;
+  color: #fff;
+}
+
+.Pagimagic-default .Pagimagic-nav-item.Pagimagic-nav-item--prev,
+.Pagimagic-default .Pagimagic-nav-item.Pagimagic-nav-item--next {
+  position: relative;
+  border: none;
+}
+
+.Pagimagic-default .Pagimagic-nav-arrow {
+  position: absolute;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  top: 0;
+  left: 0;
+}
+.Pagimagic-default .Pagimagic-nav-arrow svg {
+  display: inline-block;
+  width: 100%;
+}
+.Pagimagic-default .Pagimagic-nav-item--prev .Pagimagic-nav-arrow {
+  transform: rotate(-180deg);
+}

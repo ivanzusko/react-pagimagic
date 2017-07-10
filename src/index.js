@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import DefaultArrow from './DefaultArrow';
+import './defaultStyles.css';
+
 const propTypes = {
   // list of items
   list: PropTypes.array.isRequired,
@@ -15,6 +18,8 @@ const propTypes = {
   // custom arrow element/component (if not specified
   // Pagimagic will render it's own <span>:
   arrow: PropTypes.func,
+  // if you don't have specify/apply your own styles:
+  useDefaultStyles: PropTypes.bool,
 };
 
 class Pagimagic extends Component {
@@ -74,13 +79,18 @@ class Pagimagic extends Component {
       >
         {
           this.props.arrow ? 
-          this.props.arrow() : 
-          <span
-          className="Pagimagic-nav-arrow"
-          aria-hidden="true"
-          >
-            {forward}  
-          </span>
+          this.props.arrow() : (
+            this.props.useDefaultStyles ? 
+            <DefaultArrow 
+              next={forward === 'next'}
+            /> :
+            <span
+            className="Pagimagic-nav-arrow"
+            aria-hidden="true"
+            >
+              {forward}  
+            </span>
+          )
         }
       </div>
     );
@@ -99,7 +109,8 @@ class Pagimagic extends Component {
     const endList = startList + itemsPerPage;
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
-    const className = props.className ? `Pagimagic ${props.className}` : 'Pagimagic';
+    const initialClassName = props.className ? `Pagimagic ${props.className}` : 'Pagimagic Pagimagic-default';
+    const className = props.useDefaultStyles ? `${initialClassName} Pagimagic-default` : initialClassName;
     const {
       currentPage,
       totalPaginators,
