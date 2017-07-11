@@ -21,10 +21,6 @@ const propTypes = {
   useDefaultStyles: PropTypes.bool,
 };
 
-const styles = {
-  nav: () => ({})
-};
-
 class Pagimagic extends Component {
   constructor(props) {
     super(props);
