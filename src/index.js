@@ -181,9 +181,8 @@ class Pagimagic extends Component {
                         border: 'solid 1px #000',
                         borderRadius: '3px',
                         textAlign: 'center',
-			      margin: '0 5px',
-                        backgroundColor:
-                            currentPage === pageIndex ? '#000' : '#fff',
+                        margin: '0 5px',
+                        backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
                         color: currentPage === pageIndex ? '#fff' : '#000'
                       }
                       : {}
