@@ -121,7 +121,7 @@ Property | Type | isRequired | Default value | Description
 `useDefaultStyles` | Boolean | no | `false` | You can use very basic default styles by passing `useDefaultStyles` property. Without passing this prop you will get naked pagination. 
 
 ## Demo
-[https://codesandbox.io/embed/n5g6xQ6qE](https://codesandbox.io/s/KOy0oNOKG)
+[https://codesandbox.io/s/KOy0oNOKG](https://codesandbox.io/s/KOy0oNOKG)
 
 ## License
 Licensed under [MIT](https://opensource.org/licenses/MIT) license.
