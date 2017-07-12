@@ -27,12 +27,12 @@ class Pagimagic extends Component {
 
     this.state = {
       currentPage: this.props.currentPageIndex,
-      list: this.props.list,
-      totalPaginators: Math.ceil(
-        this.props.list.length / this.props.itemsPerPage
-      )
     };
   }
+
+  getTotalPaginators = () => {
+    return Math.ceil(this.props.list.length / this.props.itemsPerPage);
+  };
 
   goTo = pageIndex => {
     this.setState(() => ({ currentPage: pageIndex }));
@@ -51,9 +51,9 @@ class Pagimagic extends Component {
   onClickNext = event => {
     event.preventDefault();
 
-    const { currentPage, totalPaginators } = this.state;
+    const { currentPage } = this.state;
 
-    if (currentPage + 1 < totalPaginators) {
+    if (currentPage + 1 < this.getTotalPaginators()) {
       this.goTo(currentPage + 1);
     }
   };
@@ -112,7 +112,7 @@ class Pagimagic extends Component {
 
   render() {
     const props = this.props;
-    const { itemsPerPage, maximumVisiblePaginators, renderChildren } = props;
+    const { itemsPerPage, maximumVisiblePaginators, renderChildren, list } = props;
     // where should splice starts
     const startList = this.state.currentPage * itemsPerPage;
     // where should splice ends
@@ -120,7 +120,8 @@ class Pagimagic extends Component {
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
     const className = props.className ? `Pagimagic ${props.className}` : 'Pagimagic';
-    const { currentPage, totalPaginators, list } = this.state;
+    const { currentPage } = this.state;
+    const totalPaginators = this.getTotalPaginators();
     const maxVisible =
       totalPaginators > maximumVisiblePaginators
         ? maximumVisiblePaginators
@@ -171,7 +172,7 @@ class Pagimagic extends Component {
                 <a
                   key={pageIndex}
                   style={
-                    this.props.useDefaultStyles
+                    props.useDefaultStyles
                       ? {
                         display: 'inline-block',
                         verticalAlign: 'middle',
@@ -183,7 +184,7 @@ class Pagimagic extends Component {
                         textAlign: 'center',
                         margin: '0 5px',
                         backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-                        color: currentPage === pageIndex ? '#fff' : '#000'
+                        color: currentPage === pageIndex ? '#fff' : '#000',
                       }
                       : {}
                   }
@@ -220,3 +221,4 @@ class Pagimagic extends Component {
 Pagimagic.propTypes = propTypes;
 
 export default Pagimagic;
+
