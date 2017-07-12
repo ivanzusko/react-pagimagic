@@ -108,12 +108,19 @@ Pagimagic will render following elements with such classes:
 - - `.Pagimagic-nav-item--prev` and `.Pagimagic-nav-item--next` for _previous_ and _next_ arrows.
 - if you didn't pass a custom **arrow** to the `.Pagimagic`, then `span.Pagimagic-nav-arrow` will be rendered inside `.Pagimagic-nav-item--prev` and `.Pagimagic-nav-item--next`.
 
+## With application state manager (e.g. Redux)
+In order to have more control on how the `currentPageIndex` is changing, you may use `changePageIndex` prop, which will provide you the possibility to change the `currentPageIndex` externally (by default **Pagimagic** is handling pagination by itself, internally handling changing of the current page index). Just pass inside you action creator, so it will be called whenever user will decide to click either paginator or prev/next arrows.
+
+Redux [example](https://codesandbox.io/s/ABjN7AXz)
+
+
 ## More info
 Property | Type | isRequired | Default value | Description
 :---|:---|:---|:---|:---
 `list` | Array<any> | yes | - | You need to pass an array with elements, so Pagimagic will know, how many pages and pagination buttons build.
 `itemsPerPage` | Number | yes | - | How many elements will be shown on one page.
 `currentPageIndex` | Number | yes | - | Index of the page which is shown initialy.
+`changePageIndex` | Function | no | - | In case of using some application state manager(e.g. [Redux](http://redux.js.org/)) you may need possibility to pass your specific logic for changing `currentPageIndex` in your application store. For example, you may want to change in your store `currentPageIndex` whenever user clicks on paginators/arrows.
 `maximumVisiblePaginators` | Number | yes | - | How many pagination buttons should be displayed. **E.g.:** there are 10 pages, and `maximumVisiblePaginators` is set to 3, so there will be shown only 3 pagination buttons + arrow prev and arrow next, and 7 pagination buttons will be hidden.
 `renderChildren` | Function | yes | - | The way how your list should be build. `Pagimagic` will display your list acording to your logic, and will handle only pagination computation and creation.
 `className` | String | no | `Pagimagic` | If you want to have aditionaly your className.

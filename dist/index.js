@@ -84,6 +84,8 @@
     itemsPerPage: _propTypes2.default.number.isRequired,
     // index of the current page
     currentPageIndex: _propTypes2.default.number.isRequired,
+    // handler to change current page index (e.g. in case of using Redux):
+    changePageIndex: _propTypes2.default.func,
     // how many(max) paginator buttons with numbers should be shown:
     maximumVisiblePaginators: _propTypes2.default.number.isRequired,
     // render callback:
@@ -103,14 +105,25 @@
 
       var _this = _possibleConstructorReturn(this, (Pagimagic.__proto__ || Object.getPrototypeOf(Pagimagic)).call(this, props));
 
+      _this.handleChangeCurrentPageIndex = function (pageIndex) {
+        if (_this.props.changePageIndex) {
+          _this.props.changePageIndex(pageIndex);
+          _this.setState(function () {
+            return { currentPage: pageIndex };
+          });
+        } else {
+          _this.setState(function () {
+            return { currentPage: pageIndex };
+          });
+        }
+      };
+
       _this.getTotalPaginators = function () {
         return Math.ceil(_this.props.list.length / _this.props.itemsPerPage);
       };
 
       _this.goTo = function (pageIndex) {
-        _this.setState(function () {
-          return { currentPage: pageIndex };
-        });
+        _this.handleChangeCurrentPageIndex(pageIndex);
       };
 
       _this.onClickPrev = function (event) {
@@ -179,6 +192,15 @@
     }
 
     _createClass(Pagimagic, [{
+      key: 'componentWillReceiveProps',
+      value: function componentWillReceiveProps(nextProps) {
+        if (nextProps.currentPageIndex !== this.props.currentPageIndex) {
+          this.setState(function () {
+            return { currentPage: nextProps.currentPageIndex };
+          });
+        }
+      }
+    }, {
       key: 'render',
       value: function render() {
         var _this2 = this;
