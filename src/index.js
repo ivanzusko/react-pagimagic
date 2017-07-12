@@ -10,6 +10,8 @@ const propTypes = {
   itemsPerPage: PropTypes.number.isRequired,
   // index of the current page
   currentPageIndex: PropTypes.number.isRequired,
+  // handler to change current page index (e.g. in case of using Redux):
+  changePageIndex: PropTypes.func,
   // how many(max) paginator buttons with numbers should be shown:
   maximumVisiblePaginators: PropTypes.number.isRequired,
   // render callback:
@@ -30,12 +32,28 @@ class Pagimagic extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentPageIndex !== this.props.currentPageIndex) {
+      this.setState(() => ({ currentPage: nextProps.currentPageIndex }));
+    }
+  }
+
+  handleChangeCurrentPageIndex = (pageIndex) => {
+    if (this.props.changePageIndex) {
+      this.props.changePageIndex(pageIndex);
+      this.setState(() => ({ currentPage: pageIndex }));
+    }
+    else {
+      this.setState(() => ({ currentPage: pageIndex }));
+    }
+  }
+
   getTotalPaginators = () => {
     return Math.ceil(this.props.list.length / this.props.itemsPerPage);
   };
 
   goTo = pageIndex => {
-    this.setState(() => ({ currentPage: pageIndex }));
+    this.handleChangeCurrentPageIndex(pageIndex);
   };
 
   onClickPrev = event => {
@@ -86,12 +104,12 @@ class Pagimagic extends Component {
               verticalAlign: 'middle',
               width: '50px',
               height: '50px',
-              opacity: disabled(direction) === 'disabled' ? '.3' : 1
+              opacity: disabled(direction) === 'disabled' ? '.3' : 1,
             }
             : {
               display: 'inline-block',
               cursor:
-                  disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer'
+                  disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
             }
         }
         className={`Pagimagic-nav-item Pagimagic-nav-item--${forward} ${disabled(direction)}`}
@@ -221,4 +239,3 @@ class Pagimagic extends Component {
 Pagimagic.propTypes = propTypes;
 
 export default Pagimagic;
-
