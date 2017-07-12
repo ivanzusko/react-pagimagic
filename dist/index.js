@@ -103,6 +103,10 @@
 
       var _this = _possibleConstructorReturn(this, (Pagimagic.__proto__ || Object.getPrototypeOf(Pagimagic)).call(this, props));
 
+      _this.getTotalPaginators = function () {
+        return Math.ceil(_this.props.list.length / _this.props.itemsPerPage);
+      };
+
       _this.goTo = function (pageIndex) {
         _this.setState(function () {
           return { currentPage: pageIndex };
@@ -123,12 +127,10 @@
       _this.onClickNext = function (event) {
         event.preventDefault();
 
-        var _this$state = _this.state,
-            currentPage = _this$state.currentPage,
-            totalPaginators = _this$state.totalPaginators;
+        var currentPage = _this.state.currentPage;
 
 
-        if (currentPage + 1 < totalPaginators) {
+        if (currentPage + 1 < _this.getTotalPaginators()) {
           _this.goTo(currentPage + 1);
         }
       };
@@ -171,9 +173,7 @@
       };
 
       _this.state = {
-        currentPage: _this.props.currentPageIndex,
-        list: _this.props.list,
-        totalPaginators: Math.ceil(_this.props.list.length / _this.props.itemsPerPage)
+        currentPage: _this.props.currentPageIndex
       };
       return _this;
     }
@@ -186,7 +186,8 @@
         var props = this.props;
         var itemsPerPage = props.itemsPerPage,
             maximumVisiblePaginators = props.maximumVisiblePaginators,
-            renderChildren = props.renderChildren;
+            renderChildren = props.renderChildren,
+            list = props.list;
 
         // where should splice starts
         var startList = this.state.currentPage * itemsPerPage;
@@ -197,11 +198,9 @@
           return targetList.slice(startList, endList);
         };
         var className = props.className ? 'Pagimagic ' + props.className : 'Pagimagic';
-        var _state = this.state,
-            currentPage = _state.currentPage,
-            totalPaginators = _state.totalPaginators,
-            list = _state.list;
+        var currentPage = this.state.currentPage;
 
+        var totalPaginators = this.getTotalPaginators();
         var maxVisible = totalPaginators > maximumVisiblePaginators ? maximumVisiblePaginators : totalPaginators;
         var skip = 0;
 
@@ -234,7 +233,7 @@
                 'a',
                 {
                   key: pageIndex,
-                  style: _this2.props.useDefaultStyles ? {
+                  style: props.useDefaultStyles ? {
                     display: 'inline-block',
                     verticalAlign: 'middle',
                     lineHeight: '50px',
