@@ -8,6 +8,8 @@ Here is available a short [Demo](https://codesandbox.io/s/KOy0oNOKG).
     <img src="https://travis-ci.org/ivanzusko/react-pagimagic.svg?branch=master" alt="travis-web"/>
   </a>
   <img src="https://img.shields.io/npm/dt/react-pagimagic.svg" alt="total downloads" />
+  <img src="https://img.shields.io/github/issues/ivanzusko/react-pagimagic.svg" alt="opened issues" />
+  <img src="https://img.shields.io/github/issues-closed-raw/ivanzusko/react-pagimagic.svg" alt="closed issues" />
   <a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/npm/l/react-pagimagic.svg"></a>
 </p>
 
