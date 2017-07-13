@@ -111,7 +111,7 @@ Pagimagic will render following elements with such classes:
 ## With application state manager (e.g. Redux)
 In order to have more control on how the `currentPageIndex` is changing, you may use `changePageIndex` prop, which will provide you the possibility to change the `currentPageIndex` externally (by default **Pagimagic** is handling pagination by itself, internally handling changing of the current page index). Just pass inside you action creator, so it will be called whenever user will decide to click either paginator or prev/next arrows.
 
-Redux [example](https://codesandbox.io/s/ABjN7AXz)
+Redux [example](https://codesandbox.io/s/vggKy71QL)
 
 
 ## More info
