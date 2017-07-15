@@ -128,17 +128,98 @@ class Pagimagic extends Component {
     );
   };
 
+  
+
+  createIterator = (amount, skip) => {
+    return Array.apply(null, Array(amount)).reduce((memo, item, i) => {
+      memo.push(skip + i);
+
+      return memo;
+    }, []);
+  };
+
+  conditionToReturnIterator = (fn, total, max, skip) => {
+    console.log(Math.floor(max / 2));
+    const b = total > max ? fn(max, skip) : fn(total, skip);
+    console.error(b);
+    console.warn(this.state.currentPage);
+    return b;
+  };
+
+  /**
+   * 2, 3, (4), 5, 6
+   *
+   * current // 4
+   * leftpad // 2
+   * visible // 5
+   *
+   * create an Array with `leftpad` from left side of `current`
+   */
+
+  renderPaginators = (
+    currentPage,
+    conditionToReturnIterator,
+    createIterator,
+    totalPaginators,
+    maxVisible,
+    skip
+  ) => {
+    return (
+      conditionToReturnIterator(
+        createIterator,
+        totalPaginators,
+        maxVisible,
+        skip
+      ).map(pageIndex => {
+
+        return (
+          <a
+            key={pageIndex}
+            style={
+              this.props.useDefaultStyles
+                ? {
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                  lineHeight: '50px',
+                  width: '50px',
+                  height: '50px',
+                  border: 'solid 1px #000',
+                  borderRadius: '3px',
+                  textAlign: 'center',
+                  margin: '0 5px',
+                  backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
+                  color: currentPage === pageIndex ? '#fff' : '#000',
+                }
+                : {}
+            }
+            onClick={() => {
+              this.goTo(pageIndex);
+            }}
+            className={
+              currentPage === pageIndex
+                ? 'Pagimagic-nav-item active'
+                : 'Pagimagic-nav-item'
+            }
+          >
+            {pageIndex + 1}
+          </a>
+        );
+      })
+    );
+  };
+
   render() {
     const props = this.props;
+    const { currentPage } = this.state;
     const { itemsPerPage, maximumVisiblePaginators, renderChildren, list } = props;
     // where should splice starts
-    const startList = this.state.currentPage * itemsPerPage;
+    const startList = currentPage * itemsPerPage;
     // where should splice ends
     const endList = startList + itemsPerPage;
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
     const className = props.className ? `Pagimagic ${props.className}` : 'Pagimagic';
-    const { currentPage } = this.state;
+    
     const totalPaginators = this.getTotalPaginators();
     const maxVisible =
       totalPaginators > maximumVisiblePaginators
@@ -146,23 +227,14 @@ class Pagimagic extends Component {
         : totalPaginators;
     let skip = 0;
 
-    const createIterator = (amount, skip) => {
-      return Array.apply(null, Array(amount)).reduce((memo, item, i) => {
-        memo.push(skip + i);
-
-        return memo;
-      }, []);
-    };
-
-    const conditionToReturnIterator = (fn, total, max, skip) => {
-      return total > max ? fn(max, skip) : fn(total, skip);
-    };
+    
 
     if (
       (currentPage + 1 > maxVisible && currentPage < totalPaginators) ||
       currentPage + 1 === totalPaginators
     ) {
       skip = currentPage + 1 - maxVisible;
+      console.warn('skip: ', skip);
     }
 
     return (
@@ -180,45 +252,14 @@ class Pagimagic extends Component {
           }
 
           {
-            conditionToReturnIterator(
-              createIterator,
+            this.renderPaginators(
+              currentPage,
+              this.conditionToReturnIterator,
+              this.createIterator,
               totalPaginators,
               maxVisible,
               skip
-            ).map(pageIndex => {
-              return (
-                <a
-                  key={pageIndex}
-                  style={
-                    props.useDefaultStyles
-                      ? {
-                        display: 'inline-block',
-                        verticalAlign: 'middle',
-                        lineHeight: '50px',
-                        width: '50px',
-                        height: '50px',
-                        border: 'solid 1px #000',
-                        borderRadius: '3px',
-                        textAlign: 'center',
-                        margin: '0 5px',
-                        backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-                        color: currentPage === pageIndex ? '#fff' : '#000',
-                      }
-                      : {}
-                  }
-                  onClick={() => {
-                    this.goTo(pageIndex);
-                  }}
-                  className={
-                    currentPage === pageIndex
-                      ? 'Pagimagic-nav-item active'
-                      : 'Pagimagic-nav-item'
-                  }
-                >
-                  {pageIndex + 1}
-                </a>
-              );
-            })
+            )
           }
 
           {
