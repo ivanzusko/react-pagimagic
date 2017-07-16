@@ -92,27 +92,27 @@ class Pagimagic extends Component {
 
     return (
       <div
-        style={
-          this.props.useDefaultStyles
-            ? {
-              display: 'inline-block',
-              cursor:
-                  disabled(direction) === 'disabled'
-                    ? 'not-allowed'
-                    : 'pointer',
-              position: 'relative',
-              verticalAlign: 'middle',
-              width: '50px',
-              height: '50px',
-              opacity: disabled(direction) === 'disabled' ? '.3' : 1,
-            }
-            : {
-              display: 'inline-block',
-              cursor:
-                  disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
-            }
+      style={
+        this.props.useDefaultStyles
+        ? {
+          display: 'inline-block',
+          cursor:
+          disabled(direction) === 'disabled'
+          ? 'not-allowed'
+          : 'pointer',
+          position: 'relative',
+          verticalAlign: 'middle',
+          width: '50px',
+          height: '50px',
+          opacity: disabled(direction) === 'disabled' ? '.3' : 1,
         }
-        className={`Pagimagic-nav-item Pagimagic-nav-item--${forward} ${disabled(direction)}`}
+        : {
+          display: 'inline-block',
+          cursor:
+          disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
+        }
+      }
+      className={`Pagimagic-nav-item Pagimagic-nav-item--${forward} ${disabled(direction)}`}
         onClick={e => {
           callbackFn(e);
         }}
@@ -128,17 +128,98 @@ class Pagimagic extends Component {
     );
   };
 
+
+
+  createIterator = (amount, skip, half) => {
+    return Array.apply(null, Array(amount)).reduce((memo, item, i) => {
+      const sum = skip + i + half;
+      const enough = skip + half + amount;
+      
+      if (enough <= this.getTotalPaginators() && this.state.currentPage !== 0) {
+        memo.push(sum);
+      }
+      else if (this.state.currentPage === 0) {
+        memo.push(i);
+      }
+      else {
+        memo.push(skip + i);
+      }
+
+      return memo;
+    }, []);
+  };
+
+  conditionToReturnIterator = (fn, total, max, skip) => {
+    const half = Math.floor(max / 2);
+    const paginatorsToBeRendered = total > max ? fn(max, skip, half) : fn(total, skip, half);
+
+    return paginatorsToBeRendered;
+  };
+
+  renderPaginators = (
+    currentPage,
+    conditionToReturnIterator,
+    createIterator,
+    totalPaginators,
+    maxVisible,
+    skip
+  ) => {
+    return (
+      conditionToReturnIterator(
+        createIterator,
+        totalPaginators,
+        maxVisible,
+        skip
+      ).map(pageIndex => {
+
+        return (
+          <a
+            key={pageIndex}
+            style={
+              this.props.useDefaultStyles
+                ? {
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                  lineHeight: '50px',
+                  width: '50px',
+                  height: '50px',
+                  border: 'solid 1px #000',
+                  borderRadius: '3px',
+                  textAlign: 'center',
+                  margin: '0 5px',
+                  backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
+                  color: currentPage === pageIndex ? '#fff' : '#000',
+                }
+                : {}
+            }
+            onClick={() => {
+              this.goTo(pageIndex);
+            }}
+            className={
+              currentPage === pageIndex
+                ? 'Pagimagic-nav-item active'
+                : 'Pagimagic-nav-item'
+            }
+          >
+            {pageIndex + 1}
+          </a>
+        );
+      })
+    );
+  };
+
   render() {
     const props = this.props;
+    const { currentPage } = this.state;
     const { itemsPerPage, maximumVisiblePaginators, renderChildren, list } = props;
     // where should splice starts
-    const startList = this.state.currentPage * itemsPerPage;
+    const startList = currentPage * itemsPerPage;
     // where should splice ends
     const endList = startList + itemsPerPage;
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
     const className = props.className ? `Pagimagic ${props.className}` : 'Pagimagic';
-    const { currentPage } = this.state;
+
     const totalPaginators = this.getTotalPaginators();
     const maxVisible =
       totalPaginators > maximumVisiblePaginators
@@ -146,22 +227,13 @@ class Pagimagic extends Component {
         : totalPaginators;
     let skip = 0;
 
-    const createIterator = (amount, skip) => {
-      return Array.apply(null, Array(amount)).reduce((memo, item, i) => {
-        memo.push(skip + i);
-
-        return memo;
-      }, []);
-    };
-
-    const conditionToReturnIterator = (fn, total, max, skip) => {
-      return total > max ? fn(max, skip) : fn(total, skip);
-    };
-
     if (
       (currentPage + 1 > maxVisible && currentPage < totalPaginators) ||
       currentPage + 1 === totalPaginators
     ) {
+      skip = currentPage + 1 - maxVisible;
+    }
+    else if (currentPage + 1 < maxVisible) {
       skip = currentPage + 1 - maxVisible;
     }
 
@@ -180,45 +252,14 @@ class Pagimagic extends Component {
           }
 
           {
-            conditionToReturnIterator(
-              createIterator,
+            this.renderPaginators(
+              currentPage,
+              this.conditionToReturnIterator,
+              this.createIterator,
               totalPaginators,
               maxVisible,
               skip
-            ).map(pageIndex => {
-              return (
-                <a
-                  key={pageIndex}
-                  style={
-                    props.useDefaultStyles
-                      ? {
-                        display: 'inline-block',
-                        verticalAlign: 'middle',
-                        lineHeight: '50px',
-                        width: '50px',
-                        height: '50px',
-                        border: 'solid 1px #000',
-                        borderRadius: '3px',
-                        textAlign: 'center',
-                        margin: '0 5px',
-                        backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-                        color: currentPage === pageIndex ? '#fff' : '#000',
-                      }
-                      : {}
-                  }
-                  onClick={() => {
-                    this.goTo(pageIndex);
-                  }}
-                  className={
-                    currentPage === pageIndex
-                      ? 'Pagimagic-nav-item active'
-                      : 'Pagimagic-nav-item'
-                  }
-                >
-                  {pageIndex + 1}
-                </a>
-              );
-            })
+            )
           }
 
           {
