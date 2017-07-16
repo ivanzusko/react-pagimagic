@@ -92,27 +92,27 @@ class Pagimagic extends Component {
 
     return (
       <div
-        style={
-          this.props.useDefaultStyles
-            ? {
-              display: 'inline-block',
-              cursor:
-                  disabled(direction) === 'disabled'
-                    ? 'not-allowed'
-                    : 'pointer',
-              position: 'relative',
-              verticalAlign: 'middle',
-              width: '50px',
-              height: '50px',
-              opacity: disabled(direction) === 'disabled' ? '.3' : 1,
-            }
-            : {
-              display: 'inline-block',
-              cursor:
-                  disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
-            }
+      style={
+        this.props.useDefaultStyles
+        ? {
+          display: 'inline-block',
+          cursor:
+          disabled(direction) === 'disabled'
+          ? 'not-allowed'
+          : 'pointer',
+          position: 'relative',
+          verticalAlign: 'middle',
+          width: '50px',
+          height: '50px',
+          opacity: disabled(direction) === 'disabled' ? '.3' : 1,
         }
-        className={`Pagimagic-nav-item Pagimagic-nav-item--${forward} ${disabled(direction)}`}
+        : {
+          display: 'inline-block',
+          cursor:
+          disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
+        }
+      }
+      className={`Pagimagic-nav-item Pagimagic-nav-item--${forward} ${disabled(direction)}`}
         onClick={e => {
           callbackFn(e);
         }}
@@ -128,33 +128,33 @@ class Pagimagic extends Component {
     );
   };
 
-  
 
-  createIterator = (amount, skip) => {
+
+  createIterator = (amount, skip, half) => {
     return Array.apply(null, Array(amount)).reduce((memo, item, i) => {
-      memo.push(skip + i);
+      const sum = skip + i + half;
+      const enough = skip + half + amount;
+      
+      if (enough <= this.getTotalPaginators() && this.state.currentPage !== 0) {
+        memo.push(sum);
+      }
+      else if (this.state.currentPage === 0) {
+        memo.push(i);
+      }
+      else {
+        memo.push(skip + i);
+      }
 
       return memo;
     }, []);
   };
 
   conditionToReturnIterator = (fn, total, max, skip) => {
-    console.log(Math.floor(max / 2));
-    const b = total > max ? fn(max, skip) : fn(total, skip);
-    console.error(b);
-    console.warn(this.state.currentPage);
-    return b;
-  };
+    const half = Math.floor(max / 2);
+    const paginatorsToBeRendered = total > max ? fn(max, skip, half) : fn(total, skip, half);
 
-  /**
-   * 2, 3, (4), 5, 6
-   *
-   * current // 4
-   * leftpad // 2
-   * visible // 5
-   *
-   * create an Array with `leftpad` from left side of `current`
-   */
+    return paginatorsToBeRendered;
+  };
 
   renderPaginators = (
     currentPage,
@@ -219,7 +219,7 @@ class Pagimagic extends Component {
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
     const className = props.className ? `Pagimagic ${props.className}` : 'Pagimagic';
-    
+
     const totalPaginators = this.getTotalPaginators();
     const maxVisible =
       totalPaginators > maximumVisiblePaginators
@@ -227,14 +227,14 @@ class Pagimagic extends Component {
         : totalPaginators;
     let skip = 0;
 
-    
-
     if (
       (currentPage + 1 > maxVisible && currentPage < totalPaginators) ||
       currentPage + 1 === totalPaginators
     ) {
       skip = currentPage + 1 - maxVisible;
-      console.warn('skip: ', skip);
+    }
+    else if (currentPage + 1 < maxVisible) {
+      skip = currentPage + 1 - maxVisible;
     }
 
     return (
