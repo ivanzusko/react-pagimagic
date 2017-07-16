@@ -185,6 +185,60 @@
         );
       };
 
+      _this.createIterator = function (amount, skip, half) {
+        return Array.apply(null, Array(amount)).reduce(function (memo, item, i) {
+          var sum = skip + i + half;
+          var enough = skip + half + amount;
+
+          if (enough <= _this.getTotalPaginators() && _this.state.currentPage !== 0) {
+            memo.push(sum);
+          } else if (_this.state.currentPage === 0) {
+            memo.push(i);
+          } else {
+            memo.push(skip + i);
+          }
+
+          return memo;
+        }, []);
+      };
+
+      _this.conditionToReturnIterator = function (fn, total, max, skip) {
+        var half = Math.floor(max / 2);
+        var paginatorsToBeRendered = total > max ? fn(max, skip, half) : fn(total, skip, half);
+
+        return paginatorsToBeRendered;
+      };
+
+      _this.renderPaginators = function (currentPage, conditionToReturnIterator, createIterator, totalPaginators, maxVisible, skip) {
+        return conditionToReturnIterator(createIterator, totalPaginators, maxVisible, skip).map(function (pageIndex) {
+
+          return _react2.default.createElement(
+            'a',
+            {
+              key: pageIndex,
+              style: _this.props.useDefaultStyles ? {
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                lineHeight: '50px',
+                width: '50px',
+                height: '50px',
+                border: 'solid 1px #000',
+                borderRadius: '3px',
+                textAlign: 'center',
+                margin: '0 5px',
+                backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
+                color: currentPage === pageIndex ? '#fff' : '#000'
+              } : {},
+              onClick: function onClick() {
+                _this.goTo(pageIndex);
+              },
+              className: currentPage === pageIndex ? 'Pagimagic-nav-item active' : 'Pagimagic-nav-item'
+            },
+            pageIndex + 1
+          );
+        });
+      };
+
       _this.state = {
         currentPage: _this.props.currentPageIndex
       };
@@ -203,16 +257,15 @@
     }, {
       key: 'render',
       value: function render() {
-        var _this2 = this;
-
         var props = this.props;
+        var currentPage = this.state.currentPage;
         var itemsPerPage = props.itemsPerPage,
             maximumVisiblePaginators = props.maximumVisiblePaginators,
             renderChildren = props.renderChildren,
             list = props.list;
 
         // where should splice starts
-        var startList = this.state.currentPage * itemsPerPage;
+        var startList = currentPage * itemsPerPage;
         // where should splice ends
         var endList = startList + itemsPerPage;
         // elements which should to be shown
@@ -220,25 +273,14 @@
           return targetList.slice(startList, endList);
         };
         var className = props.className ? 'Pagimagic ' + props.className : 'Pagimagic';
-        var currentPage = this.state.currentPage;
 
         var totalPaginators = this.getTotalPaginators();
         var maxVisible = totalPaginators > maximumVisiblePaginators ? maximumVisiblePaginators : totalPaginators;
         var skip = 0;
 
-        var createIterator = function createIterator(amount, skip) {
-          return Array.apply(null, Array(amount)).reduce(function (memo, item, i) {
-            memo.push(skip + i);
-
-            return memo;
-          }, []);
-        };
-
-        var conditionToReturnIterator = function conditionToReturnIterator(fn, total, max, skip) {
-          return total > max ? fn(max, skip) : fn(total, skip);
-        };
-
         if (currentPage + 1 > maxVisible && currentPage < totalPaginators || currentPage + 1 === totalPaginators) {
+          skip = currentPage + 1 - maxVisible;
+        } else if (currentPage + 1 < maxVisible) {
           skip = currentPage + 1 - maxVisible;
         }
 
@@ -250,32 +292,7 @@
             'nav',
             { className: 'Pagimagic-nav' },
             totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickPrev),
-            conditionToReturnIterator(createIterator, totalPaginators, maxVisible, skip).map(function (pageIndex) {
-              return _react2.default.createElement(
-                'a',
-                {
-                  key: pageIndex,
-                  style: props.useDefaultStyles ? {
-                    display: 'inline-block',
-                    verticalAlign: 'middle',
-                    lineHeight: '50px',
-                    width: '50px',
-                    height: '50px',
-                    border: 'solid 1px #000',
-                    borderRadius: '3px',
-                    textAlign: 'center',
-                    margin: '0 5px',
-                    backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-                    color: currentPage === pageIndex ? '#fff' : '#000'
-                  } : {},
-                  onClick: function onClick() {
-                    _this2.goTo(pageIndex);
-                  },
-                  className: currentPage === pageIndex ? 'Pagimagic-nav-item active' : 'Pagimagic-nav-item'
-                },
-                pageIndex + 1
-              );
-            }),
+            this.renderPaginators(currentPage, this.conditionToReturnIterator, this.createIterator, totalPaginators, maxVisible, skip),
             totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickNext, 'next')
           )
         );
