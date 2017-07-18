@@ -128,17 +128,16 @@ class Pagimagic extends Component {
     );
   };
 
-
-
   createIterator = (amount, skip, half) => {
     return Array.apply(null, Array(amount)).reduce((memo, item, i) => {
+      const cP = this.state.currentPage;
       const sum = skip + i + half;
       const enough = skip + half + amount;
       
-      if (enough <= this.getTotalPaginators() && this.state.currentPage !== 0) {
+      if (enough <= this.getTotalPaginators() && cP !== 0 && cP >= half) {
         memo.push(sum);
       }
-      else if (this.state.currentPage === 0) {
+      else if (cP === 0 || cP < half) {
         memo.push(i);
       }
       else {
@@ -153,6 +152,7 @@ class Pagimagic extends Component {
     const half = Math.floor(max / 2);
     const paginatorsToBeRendered = total > max ? fn(max, skip, half) : fn(total, skip, half);
 
+    console.warn(paginatorsToBeRendered);
     return paginatorsToBeRendered;
   };
 
