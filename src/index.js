@@ -128,50 +128,36 @@ class Pagimagic extends Component {
     );
   };
 
-  createIterator = (amount, skip, half) => {
-    return Array.apply(null, Array(amount)).reduce((memo, item, i) => {
-      const cP = this.state.currentPage;
-      const sum = skip + i + half;
-      const enough = skip + half + amount;
-      
-      if (enough <= this.getTotalPaginators() && cP !== 0 && cP >= half) {
-        memo.push(sum);
-      }
-      else if (cP === 0 || cP < half) {
+  createIterator = (currentPage) => {
+    const HALF = Math.floor(this.props.maximumVisiblePaginators / 2);
+    const VISIBLE = this.props.maximumVisiblePaginators;
+    const TOTAL = this.getTotalPaginators();
+
+    return Array.apply(null, Array(VISIBLE)).reduce((memo, item, i) => {
+      if (currentPage + HALF < VISIBLE) {
         memo.push(i);
       }
+      else if (currentPage + HALF === VISIBLE) {
+        memo.push(i + 1);
+      }
+      else if (currentPage + HALF < TOTAL) {
+        const el = (i + currentPage + HALF - VISIBLE + 1);
+        memo.push(el);
+      }
       else {
-        memo.push(skip + i);
+        const el = TOTAL - VISIBLE + i;
+        memo.push(el);
       }
 
       return memo;
     }, []);
   };
 
-  conditionToReturnIterator = (fn, total, max, skip) => {
-    const half = Math.floor(max / 2);
-    const paginatorsToBeRendered = total > max ? fn(max, skip, half) : fn(total, skip, half);
+  renderPaginators = () => {
+    const currentPage = this.state.currentPage;
 
-    console.warn(paginatorsToBeRendered);
-    return paginatorsToBeRendered;
-  };
-
-  renderPaginators = (
-    currentPage,
-    conditionToReturnIterator,
-    createIterator,
-    totalPaginators,
-    maxVisible,
-    skip
-  ) => {
     return (
-      conditionToReturnIterator(
-        createIterator,
-        totalPaginators,
-        maxVisible,
-        skip
-      ).map(pageIndex => {
-
+      this.createIterator(currentPage).map(pageIndex => {
         return (
           <a
             key={pageIndex}
@@ -209,37 +195,25 @@ class Pagimagic extends Component {
   };
 
   render() {
-    const props = this.props;
     const { currentPage } = this.state;
-    const { itemsPerPage, maximumVisiblePaginators, renderChildren, list } = props;
+    const { itemsPerPage, maximumVisiblePaginators, renderChildren, list } = this.props;
     // where should splice starts
     const startList = currentPage * itemsPerPage;
     // where should splice ends
     const endList = startList + itemsPerPage;
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
-    const className = props.className ? `Pagimagic ${props.className}` : 'Pagimagic';
+    const className = this.props.className ? `Pagimagic ${this.props.className}` : 'Pagimagic';
 
     const totalPaginators = this.getTotalPaginators();
     const maxVisible =
       totalPaginators > maximumVisiblePaginators
         ? maximumVisiblePaginators
         : totalPaginators;
-    let skip = 0;
-
-    if (
-      (currentPage + 1 > maxVisible && currentPage < totalPaginators) ||
-      currentPage + 1 === totalPaginators
-    ) {
-      skip = currentPage + 1 - maxVisible;
-    }
-    else if (currentPage + 1 < maxVisible) {
-      skip = currentPage + 1 - maxVisible;
-    }
 
     return (
       <div className={className}>
-        {renderChildren(visibleList(list))}
+        { renderChildren(visibleList(list)) }
 
         <nav className="Pagimagic-nav">
           {
@@ -251,16 +225,7 @@ class Pagimagic extends Component {
               )
           }
 
-          {
-            this.renderPaginators(
-              currentPage,
-              this.conditionToReturnIterator,
-              this.createIterator,
-              totalPaginators,
-              maxVisible,
-              skip
-            )
-          }
+          { this.renderPaginators() }
 
           {
             totalPaginators > maxVisible &&

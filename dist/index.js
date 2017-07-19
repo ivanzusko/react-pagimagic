@@ -187,12 +187,13 @@
 
       _this.createIterator = function (amount, skip, half) {
         return Array.apply(null, Array(amount)).reduce(function (memo, item, i) {
+          var cP = _this.state.currentPage;
           var sum = skip + i + half;
           var enough = skip + half + amount;
 
-          if (enough <= _this.getTotalPaginators() && _this.state.currentPage !== 0) {
+          if (enough <= _this.getTotalPaginators() && cP !== 0 && cP >= half) {
             memo.push(sum);
-          } else if (_this.state.currentPage === 0) {
+          } else if (cP === 0 || cP < half) {
             memo.push(i);
           } else {
             memo.push(skip + i);
@@ -206,6 +207,7 @@
         var half = Math.floor(max / 2);
         var paginatorsToBeRendered = total > max ? fn(max, skip, half) : fn(total, skip, half);
 
+        console.warn(paginatorsToBeRendered);
         return paginatorsToBeRendered;
       };
 
