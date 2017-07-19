@@ -185,35 +185,32 @@
         );
       };
 
-      _this.createIterator = function (amount, skip, half) {
-        return Array.apply(null, Array(amount)).reduce(function (memo, item, i) {
-          var cP = _this.state.currentPage;
-          var sum = skip + i + half;
-          var enough = skip + half + amount;
+      _this.createIterator = function (currentPage) {
+        var HALF = Math.floor(_this.props.maximumVisiblePaginators / 2);
+        var VISIBLE = _this.props.maximumVisiblePaginators;
+        var TOTAL = _this.getTotalPaginators();
 
-          if (enough <= _this.getTotalPaginators() && cP !== 0 && cP >= half) {
-            memo.push(sum);
-          } else if (cP === 0 || cP < half) {
+        return Array.apply(null, Array(VISIBLE)).reduce(function (memo, item, i) {
+          if (currentPage + HALF < VISIBLE) {
             memo.push(i);
+          } else if (currentPage + HALF === VISIBLE) {
+            memo.push(i + 1);
+          } else if (currentPage + HALF < TOTAL) {
+            var el = i + currentPage + HALF - VISIBLE + 1;
+            memo.push(el);
           } else {
-            memo.push(skip + i);
+            var _el = TOTAL - VISIBLE + i;
+            memo.push(_el);
           }
 
           return memo;
         }, []);
       };
 
-      _this.conditionToReturnIterator = function (fn, total, max, skip) {
-        var half = Math.floor(max / 2);
-        var paginatorsToBeRendered = total > max ? fn(max, skip, half) : fn(total, skip, half);
+      _this.renderPaginators = function () {
+        var currentPage = _this.state.currentPage;
 
-        console.warn(paginatorsToBeRendered);
-        return paginatorsToBeRendered;
-      };
-
-      _this.renderPaginators = function (currentPage, conditionToReturnIterator, createIterator, totalPaginators, maxVisible, skip) {
-        return conditionToReturnIterator(createIterator, totalPaginators, maxVisible, skip).map(function (pageIndex) {
-
+        return _this.createIterator(currentPage).map(function (pageIndex) {
           return _react2.default.createElement(
             'a',
             {
@@ -259,12 +256,12 @@
     }, {
       key: 'render',
       value: function render() {
-        var props = this.props;
         var currentPage = this.state.currentPage;
-        var itemsPerPage = props.itemsPerPage,
-            maximumVisiblePaginators = props.maximumVisiblePaginators,
-            renderChildren = props.renderChildren,
-            list = props.list;
+        var _props = this.props,
+            itemsPerPage = _props.itemsPerPage,
+            maximumVisiblePaginators = _props.maximumVisiblePaginators,
+            renderChildren = _props.renderChildren,
+            list = _props.list;
 
         // where should splice starts
         var startList = currentPage * itemsPerPage;
@@ -274,17 +271,10 @@
         var visibleList = function visibleList(targetList) {
           return targetList.slice(startList, endList);
         };
-        var className = props.className ? 'Pagimagic ' + props.className : 'Pagimagic';
+        var className = this.props.className ? 'Pagimagic ' + this.props.className : 'Pagimagic';
 
         var totalPaginators = this.getTotalPaginators();
         var maxVisible = totalPaginators > maximumVisiblePaginators ? maximumVisiblePaginators : totalPaginators;
-        var skip = 0;
-
-        if (currentPage + 1 > maxVisible && currentPage < totalPaginators || currentPage + 1 === totalPaginators) {
-          skip = currentPage + 1 - maxVisible;
-        } else if (currentPage + 1 < maxVisible) {
-          skip = currentPage + 1 - maxVisible;
-        }
 
         return _react2.default.createElement(
           'div',
@@ -294,7 +284,7 @@
             'nav',
             { className: 'Pagimagic-nav' },
             totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickPrev),
-            this.renderPaginators(currentPage, this.conditionToReturnIterator, this.createIterator, totalPaginators, maxVisible, skip),
+            this.renderPaginators(),
             totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickNext, 'next')
           )
         );
