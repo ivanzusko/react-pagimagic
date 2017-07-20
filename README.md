@@ -1,6 +1,7 @@
 # React component to create **pagination** from your list
 
-Here is available a short [Demo](https://codesandbox.io/s/KOy0oNOKG).
+- Here is available a short [Demo](https://codesandbox.io/s/nZRpnQR87).
+- [Usage with Redux](https://codesandbox.io/s/G5Z82ZXoK).
 
 <p align="center">
   <a href="https://www.npmjs.com/package/react-pagimagic" target="_blank"><img src="https://img.shields.io/npm/v/react-pagimagic.svg"></a>
@@ -113,7 +114,7 @@ Pagimagic will render following elements with such classes:
 ## With application state manager (e.g. Redux)
 In order to have more control on how the `currentPageIndex` is changing, you may use `changePageIndex` prop, which will provide you the possibility to change the `currentPageIndex` externally (by default **Pagimagic** is handling pagination by itself, internally handling changing of the current page index). Just pass inside you action creator, so it will be called whenever user will decide to click either paginator or prev/next arrows.
 
-Redux [example](https://codesandbox.io/s/vggKy71QL)
+Redux [example](https://codesandbox.io/s/G5Z82ZXoK)
 
 
 ## More info
@@ -130,7 +131,8 @@ Property | Type | isRequired | Default value | Description
 `useDefaultStyles` | Boolean | no | `false` | You can use very basic default styles by passing `useDefaultStyles` property. Without passing this prop you will get naked pagination. 
 
 ## Demo
-[https://codesandbox.io/s/KOy0oNOKG](https://codesandbox.io/s/KOy0oNOKG)
+- Here is available a short [Demo](https://codesandbox.io/s/nZRpnQR87).
+- [Usage with Redux](https://codesandbox.io/s/G5Z82ZXoK).
 
 ## License
 Licensed under [MIT](https://opensource.org/licenses/MIT) license.
