@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { typeOf } from 'picklock';
 
+import glue from './glue';
 import DefaultArrow from './DefaultArrow';
 
 const propTypes = {
@@ -18,7 +20,7 @@ const propTypes = {
   renderChildren: PropTypes.func.isRequired,
   // custom arrow element/component (if not specified
   // Pagimagic will render it's own <span>:
-  arrow: PropTypes.func,
+  arrow: PropTypes.any,
   // if you don't want to specify/apply your own styles:
   useDefaultStyles: PropTypes.bool,
 };
@@ -92,38 +94,44 @@ class Pagimagic extends Component {
 
     return (
       <div
-      style={
-        this.props.useDefaultStyles
-        ? {
-          display: 'inline-block',
-          cursor:
-          disabled(direction) === 'disabled'
-          ? 'not-allowed'
-          : 'pointer',
-          position: 'relative',
-          verticalAlign: 'middle',
-          width: '50px',
-          height: '50px',
-          opacity: disabled(direction) === 'disabled' ? '.3' : 1,
+        style={
+          this.props.useDefaultStyles
+          ? {
+            display: 'inline-block',
+            cursor:
+            disabled(direction) === 'disabled'
+            ? 'not-allowed'
+            : 'pointer',
+            position: 'relative',
+            verticalAlign: 'middle',
+            width: '50px',
+            height: '50px',
+            opacity: disabled(direction) === 'disabled' ? '.3' : 1,
+          }
+          : {
+            display: 'inline-block',
+            cursor:
+            disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
+          }
         }
-        : {
-          display: 'inline-block',
-          cursor:
-          disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
+        className={
+          glue('Pagimagic', this.props.className)(['__nav-item', `__nav-item--${forward}`, `__nav-item--${disabled(direction)}`])
         }
-      }
-      className={`Pagimagic-nav-item Pagimagic-nav-item--${forward} ${disabled(direction)}`}
         onClick={e => {
           callbackFn(e);
         }}
       >
-        {this.props.arrow
-          ? this.props.arrow()
-          : this.props.useDefaultStyles
-            ? <DefaultArrow next={forward === 'next'} />
-            : <span className="Pagimagic-nav-arrow" aria-hidden="true">
-                {forward}
-              </span>}
+        {
+          this.props.arrow && typeOf(this.props.arrow, 'function')
+          	? this.props.arrow()
+          	: this.props.useDefaultStyles
+            	? <DefaultArrow next={forward === 'next'} />
+                : this.props.arrow
+                    ? <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`])}></span>
+                    : <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`])} aria-hidden="true">
+                        {forward}
+                      </span>
+        }
       </div>
     );
   };
@@ -183,8 +191,8 @@ class Pagimagic extends Component {
             }}
             className={
               currentPage === pageIndex
-                ? 'Pagimagic-nav-item active'
-                : 'Pagimagic-nav-item'
+                ? glue('Pagimagic', this.props.className)(['__nav-item', '__nav-item--active'])
+                : glue('Pagimagic', this.props.className)(['__nav-item'])
             }
           >
             {pageIndex + 1}
@@ -203,7 +211,6 @@ class Pagimagic extends Component {
     const endList = startList + itemsPerPage;
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
-    const className = this.props.className ? `Pagimagic ${this.props.className}` : 'Pagimagic';
 
     const totalPaginators = this.getTotalPaginators();
     const maxVisible =
@@ -212,10 +219,10 @@ class Pagimagic extends Component {
         : totalPaginators;
 
     return (
-      <div className={className}>
+      <div className={glue('Pagimagic', this.props.className)()}>
         { renderChildren(visibleList(list)) }
 
-        <nav className="Pagimagic-nav">
+        <nav className={glue('Pagimagic', this.props.className)(['__nav'])}>
           {
             totalPaginators > maxVisible &&
               this.renderPrevNextButtons(
