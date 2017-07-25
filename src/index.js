@@ -130,14 +130,14 @@ class Pagimagic extends Component {
 
   createIterator = (currentPage) => {
     const HALF = Math.floor(this.props.maximumVisiblePaginators / 2);
-    const VISIBLE = this.props.maximumVisiblePaginators;
     const TOTAL = this.getTotalPaginators();
+    const VISIBLE = TOTAL > this.props.maximumVisiblePaginators ? this.props.maximumVisiblePaginators : TOTAL;
 
     return Array.apply(null, Array(VISIBLE)).reduce((memo, item, i) => {
       if (currentPage + HALF < VISIBLE) {
         memo.push(i);
       }
-      else if (currentPage + HALF === VISIBLE) {
+      else if (currentPage + HALF === VISIBLE && VISIBLE !== TOTAL) {
         memo.push(i + 1);
       }
       else if (currentPage + HALF < TOTAL) {
