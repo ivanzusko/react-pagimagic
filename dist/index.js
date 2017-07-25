@@ -187,13 +187,13 @@
 
       _this.createIterator = function (currentPage) {
         var HALF = Math.floor(_this.props.maximumVisiblePaginators / 2);
-        var VISIBLE = _this.props.maximumVisiblePaginators;
         var TOTAL = _this.getTotalPaginators();
+        var VISIBLE = TOTAL > _this.props.maximumVisiblePaginators ? _this.props.maximumVisiblePaginators : TOTAL;
 
         return Array.apply(null, Array(VISIBLE)).reduce(function (memo, item, i) {
           if (currentPage + HALF < VISIBLE) {
             memo.push(i);
-          } else if (currentPage + HALF === VISIBLE) {
+          } else if (currentPage + HALF === VISIBLE && VISIBLE !== TOTAL) {
             memo.push(i + 1);
           } else if (currentPage + HALF < TOTAL) {
             var el = i + currentPage + HALF - VISIBLE + 1;

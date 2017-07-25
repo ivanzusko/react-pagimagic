@@ -1,7 +1,7 @@
 # React component to create **pagination** from your list
 
-- Here is available a short [Demo](https://codesandbox.io/s/nZRpnQR87).
-- [Usage with Redux](https://codesandbox.io/s/G5Z82ZXoK).
+- Here is available a short [Demo](https://codesandbox.io/s/mw2Ojlm73).
+- [Usage with Redux](https://codesandbox.io/s/pYADWOoAV).
 
 <p align="center">
   <a href="https://www.npmjs.com/package/react-pagimagic" target="_blank"><img src="https://img.shields.io/npm/v/react-pagimagic.svg"></a>
@@ -131,8 +131,8 @@ Property | Type | isRequired | Default value | Description
 `useDefaultStyles` | Boolean | no | `false` | You can use very basic default styles by passing `useDefaultStyles` property. Without passing this prop you will get naked pagination. 
 
 ## Demo
-- Here is available a short [Demo](https://codesandbox.io/s/nZRpnQR87).
-- [Usage with Redux](https://codesandbox.io/s/G5Z82ZXoK).
+- Here is available a short [Demo](https://codesandbox.io/s/mw2Ojlm73).
+- [Usage with Redux](https://codesandbox.io/s/pYADWOoAV).
 
 ## License
 Licensed under [MIT](https://opensource.org/licenses/MIT) license.
