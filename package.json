@@ -1,6 +1,6 @@
 {
   "name": "react-pagimagic",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React component to create pagination from your list",
   "repository": {
     "type": "git",
