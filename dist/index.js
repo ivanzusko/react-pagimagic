@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['exports', 'react', 'prop-types', './DefaultArrow'], factory);
+    define(['exports', 'react', 'prop-types', 'picklock', './glue', './DefaultArrow'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('react'), require('prop-types'), require('./DefaultArrow'));
+    factory(exports, require('react'), require('prop-types'), require('picklock'), require('./glue'), require('./DefaultArrow'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react, global.propTypes, global.DefaultArrow);
+    factory(mod.exports, global.react, global.propTypes, global.picklock, global.glue, global.DefaultArrow);
     global.index = mod.exports;
   }
-})(this, function (exports, _react, _propTypes, _DefaultArrow) {
+})(this, function (exports, _react, _propTypes, _picklock, _glue, _DefaultArrow) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -20,6 +20,8 @@
   var _react2 = _interopRequireDefault(_react);
 
   var _propTypes2 = _interopRequireDefault(_propTypes);
+
+  var _glue2 = _interopRequireDefault(_glue);
 
   var _DefaultArrow2 = _interopRequireDefault(_DefaultArrow);
 
@@ -92,7 +94,7 @@
     renderChildren: _propTypes2.default.func.isRequired,
     // custom arrow element/component (if not specified
     // Pagimagic will render it's own <span>:
-    arrow: _propTypes2.default.func,
+    arrow: _propTypes2.default.any,
     // if you don't want to specify/apply your own styles:
     useDefaultStyles: _propTypes2.default.bool
   };
@@ -172,14 +174,14 @@
               display: 'inline-block',
               cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer'
             },
-            className: 'Pagimagic-nav-item Pagimagic-nav-item--' + forward + ' ' + disabled(direction),
+            className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-item', '__nav-item--' + forward, '__nav-item--' + disabled(direction)]),
             onClick: function onClick(e) {
               callbackFn(e);
             }
           },
-          _this.props.arrow ? _this.props.arrow() : _this.props.useDefaultStyles ? _react2.default.createElement(_DefaultArrow2.default, { next: forward === 'next' }) : _react2.default.createElement(
+          _this.props.arrow && (0, _picklock.typeOf)(_this.props.arrow, 'function') ? _this.props.arrow() : _this.props.useDefaultStyles ? _react2.default.createElement(_DefaultArrow2.default, { next: forward === 'next' }) : _this.props.arrow ? _react2.default.createElement('span', { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward]) }) : _react2.default.createElement(
             'span',
-            { className: 'Pagimagic-nav-arrow', 'aria-hidden': 'true' },
+            { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward]), 'aria-hidden': 'true' },
             forward
           )
         );
@@ -231,7 +233,7 @@
               onClick: function onClick() {
                 _this.goTo(pageIndex);
               },
-              className: currentPage === pageIndex ? 'Pagimagic-nav-item active' : 'Pagimagic-nav-item'
+              className: currentPage === pageIndex ? (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-item', '__nav-item--active']) : (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-item'])
             },
             pageIndex + 1
           );
@@ -271,18 +273,17 @@
         var visibleList = function visibleList(targetList) {
           return targetList.slice(startList, endList);
         };
-        var className = this.props.className ? 'Pagimagic ' + this.props.className : 'Pagimagic';
 
         var totalPaginators = this.getTotalPaginators();
         var maxVisible = totalPaginators > maximumVisiblePaginators ? maximumVisiblePaginators : totalPaginators;
 
         return _react2.default.createElement(
           'div',
-          { className: className },
+          { className: (0, _glue2.default)('Pagimagic', this.props.className)() },
           renderChildren(visibleList(list)),
           _react2.default.createElement(
             'nav',
-            { className: 'Pagimagic-nav' },
+            { className: (0, _glue2.default)('Pagimagic', this.props.className)(['__nav']) },
             totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickPrev),
             this.renderPaginators(),
             totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickNext, 'next')

@@ -127,8 +127,8 @@ class Pagimagic extends Component {
           	: this.props.useDefaultStyles
             	? <DefaultArrow next={forward === 'next'} />
                 : this.props.arrow
-                    ? <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`])}></span>
-                    : <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`])} aria-hidden="true">
+                    ? <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])}></span>
+                    : <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])} aria-hidden="true">
                         {forward}
                       </span>
         }
