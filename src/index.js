@@ -21,6 +21,8 @@ const propTypes = {
   // custom arrow element/component (if not specified
   // Pagimagic will render it's own <span>:
   arrow: PropTypes.any,
+  // should counter (e.g.: item 1-10 of 213) be displayed or not
+  showCounter: PropTypes.bool,
   // if you don't want to specify/apply your own styles:
   useDefaultStyles: PropTypes.bool,
 };
@@ -54,13 +56,30 @@ class Pagimagic extends Component {
     return Math.ceil(this.props.list.length / this.props.itemsPerPage);
   };
 
+  getItemsPerPage = () => this.props.itemsPerPage;
+
+  getCurrentPage = () => this.state.currentPage;
+
   getMaximumVisiblePaginators = () => this.props.maximumVisiblePaginators;
+
+  getList = () => this.props.list;
+
+  // where should splice starts
+  startList = () => this.getCurrentPage() * this.getItemsPerPage();
+
+  // where should splice ends
+  endList = () => this.startList() + this.getItemsPerPage();
+
+  // elements which should to be shown
+  getVisibleList = () => this.getList().slice(this.startList(), this.endList());
 
   getMax = () => this.getTotalPaginators() > this.getMaximumVisiblePaginators()
         ? this.getMaximumVisiblePaginators()
         : this.getTotalPaginators();
 
-  needToRenderArrows = () => this.getTotalPaginators() > this.getMax()
+  needToRenderArrows = () => this.getTotalPaginators() > this.getMax();
+
+  needToShowCounter = () => !!this.props.showCounter;
 
   goTo = pageIndex => {
     this.handleChangeCurrentPageIndex(pageIndex);
@@ -69,20 +88,16 @@ class Pagimagic extends Component {
   onClickPrev = event => {
     event.preventDefault();
 
-    const { currentPage } = this.state;
-
-    if (currentPage > 0) {
-      this.goTo(currentPage - 1);
+    if (this.getCurrentPage() > 0) {
+      this.goTo(this.getCurrentPage() - 1);
     }
   };
 
   onClickNext = event => {
     event.preventDefault();
 
-    const { currentPage } = this.state;
-
-    if (currentPage + 1 < this.getTotalPaginators()) {
-      this.goTo(currentPage + 1);
+    if (this.getCurrentPage() + 1 < this.getTotalPaginators()) {
+      this.goTo(this.getCurrentPage() + 1);
     }
   };
 
@@ -290,25 +305,31 @@ class Pagimagic extends Component {
     );
   };
 
+  renderCounter = () => {
+    const from = this.startList() + 1;
+    const listLength = this.getVisibleList().length;
+    const to = from + listLength - 1;
+    const all = this.getList().length;
+
+    return (
+      <div className={glue('Pagimagic', this.props.className)(['__counter'])}>
+        {`${from}${from === to ? '' : '-'+to}`} of {all}
+      </div>
+    );
+  }
+
   render() {
-    const { currentPage } = this.state;
-    const { itemsPerPage, renderChildren, list } = this.props;
-    // where should splice starts
-    const startList = currentPage * itemsPerPage;
-    // where should splice ends
-    const endList = startList + itemsPerPage;
-    // elements which should to be shown
-    const visibleList = targetList => targetList.slice(startList, endList);
+    const { renderChildren } = this.props;
 
     return (
       <div className={glue('Pagimagic', this.props.className)()}>
-        {renderChildren(visibleList(list))}
+        {renderChildren(this.getVisibleList())}
 
         <nav className={glue('Pagimagic', this.props.className)(['__nav'])}>
           {
             this.needToRenderArrows() &&
             this.renderPrevNextButtons(
-              currentPage,
+              this.getCurrentPage(),
               this.getTotalPaginators(),
               this.onClickPrev
             )
@@ -319,13 +340,17 @@ class Pagimagic extends Component {
           {
             this.needToRenderArrows() &&
             this.renderPrevNextButtons(
-              currentPage,
+              this.getCurrentPage(),
               this.getTotalPaginators(),
               this.onClickNext,
               'next'
             )
           }
         </nav>
+        {
+          this.needToShowCounter() &&
+            this.renderCounter()
+        }
       </div>
     );
   }
