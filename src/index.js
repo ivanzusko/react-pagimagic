@@ -156,7 +156,7 @@ class Pagimagic extends Component {
       if (i + 1 === VISIBLE) memo.push(TOTAL - 1);
     };
 
-    const j1 = Array.apply(null, Array(VISIBLE)).reduce((memo, item, i) => {
+    return Array.apply(null, Array(VISIBLE)).reduce((memo, item, i) => {
       /**
        * Stage 1 - till the middle
        */
@@ -211,8 +211,6 @@ class Pagimagic extends Component {
 
       return memo;
     }, []);
-
-    return j1;
   };
 
   renderPaginators = () => {
