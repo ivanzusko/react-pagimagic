@@ -370,7 +370,6 @@
         return _react2.default.createElement(
           'div',
           { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__counter']) },
-          'Items ',
           '' + from + (from === to ? '' : '-' + to),
           ' of ',
           all

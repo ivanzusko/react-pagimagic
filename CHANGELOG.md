@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v1.3.0
+- Added counter. E.g.: `1-10 of 293`
+
 ## v1.1.3
 - Added pagination breaker: `<` 1 ... 4 **6** 7 ... 13 `>`
 

@@ -313,7 +313,7 @@ class Pagimagic extends Component {
 
     return (
       <div className={glue('Pagimagic', this.props.className)(['__counter'])}>
-        Items {`${from}${from === to ? '' : '-'+to}`} of {all}
+        {`${from}${from === to ? '' : '-'+to}`} of {all}
       </div>
     );
   }
