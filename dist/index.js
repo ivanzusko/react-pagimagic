@@ -95,6 +95,8 @@
     // custom arrow element/component (if not specified
     // Pagimagic will render it's own <span>:
     arrow: _propTypes2.default.any,
+    // should counter (e.g.: item 1-10 of 213) be displayed or not
+    showCounter: _propTypes2.default.bool,
     // if you don't want to specify/apply your own styles:
     useDefaultStyles: _propTypes2.default.bool
   };
@@ -124,8 +126,32 @@
         return Math.ceil(_this.props.list.length / _this.props.itemsPerPage);
       };
 
+      _this.getItemsPerPage = function () {
+        return _this.props.itemsPerPage;
+      };
+
+      _this.getCurrentPage = function () {
+        return _this.state.currentPage;
+      };
+
       _this.getMaximumVisiblePaginators = function () {
         return _this.props.maximumVisiblePaginators;
+      };
+
+      _this.getList = function () {
+        return _this.props.list;
+      };
+
+      _this.startList = function () {
+        return _this.getCurrentPage() * _this.getItemsPerPage();
+      };
+
+      _this.endList = function () {
+        return _this.startList() + _this.getItemsPerPage();
+      };
+
+      _this.getVisibleList = function () {
+        return _this.getList().slice(_this.startList(), _this.endList());
       };
 
       _this.getMax = function () {
@@ -136,6 +162,10 @@
         return _this.getTotalPaginators() > _this.getMax();
       };
 
+      _this.needToShowCounter = function () {
+        return !!_this.props.showCounter;
+      };
+
       _this.goTo = function (pageIndex) {
         _this.handleChangeCurrentPageIndex(pageIndex);
       };
@@ -143,22 +173,16 @@
       _this.onClickPrev = function (event) {
         event.preventDefault();
 
-        var currentPage = _this.state.currentPage;
-
-
-        if (currentPage > 0) {
-          _this.goTo(currentPage - 1);
+        if (_this.getCurrentPage() > 0) {
+          _this.goTo(_this.getCurrentPage() - 1);
         }
       };
 
       _this.onClickNext = function (event) {
         event.preventDefault();
 
-        var currentPage = _this.state.currentPage;
-
-
-        if (currentPage + 1 < _this.getTotalPaginators()) {
-          _this.goTo(currentPage + 1);
+        if (_this.getCurrentPage() + 1 < _this.getTotalPaginators()) {
+          _this.goTo(_this.getCurrentPage() + 1);
         }
       };
 
@@ -337,6 +361,22 @@
         });
       };
 
+      _this.renderCounter = function () {
+        var from = _this.startList() + 1;
+        var listLength = _this.getVisibleList().length;
+        var to = from + listLength - 1;
+        var all = _this.getList().length;
+
+        return _react2.default.createElement(
+          'div',
+          { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__counter']) },
+          'Items ',
+          '' + from + (from === to ? '' : '-' + to),
+          ' of ',
+          all
+        );
+      };
+
       _this.state = {
         currentPage: _this.props.currentPageIndex
       };
@@ -355,32 +395,21 @@
     }, {
       key: 'render',
       value: function render() {
-        var currentPage = this.state.currentPage;
-        var _props = this.props,
-            itemsPerPage = _props.itemsPerPage,
-            renderChildren = _props.renderChildren,
-            list = _props.list;
+        var renderChildren = this.props.renderChildren;
 
-        // where should splice starts
-        var startList = currentPage * itemsPerPage;
-        // where should splice ends
-        var endList = startList + itemsPerPage;
-        // elements which should to be shown
-        var visibleList = function visibleList(targetList) {
-          return targetList.slice(startList, endList);
-        };
 
         return _react2.default.createElement(
           'div',
           { className: (0, _glue2.default)('Pagimagic', this.props.className)() },
-          renderChildren(visibleList(list)),
+          renderChildren(this.getVisibleList()),
           _react2.default.createElement(
             'nav',
             { className: (0, _glue2.default)('Pagimagic', this.props.className)(['__nav']) },
-            this.needToRenderArrows() && this.renderPrevNextButtons(currentPage, this.getTotalPaginators(), this.onClickPrev),
+            this.needToRenderArrows() && this.renderPrevNextButtons(this.getCurrentPage(), this.getTotalPaginators(), this.onClickPrev),
             this.renderPaginators(),
-            this.needToRenderArrows() && this.renderPrevNextButtons(currentPage, this.getTotalPaginators(), this.onClickNext, 'next')
-          )
+            this.needToRenderArrows() && this.renderPrevNextButtons(this.getCurrentPage(), this.getTotalPaginators(), this.onClickNext, 'next')
+          ),
+          this.needToShowCounter() && this.renderCounter()
         );
       }
     }]);
