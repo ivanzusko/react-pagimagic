@@ -54,6 +54,14 @@ class Pagimagic extends Component {
     return Math.ceil(this.props.list.length / this.props.itemsPerPage);
   };
 
+  getMaximumVisiblePaginators = () => this.props.maximumVisiblePaginators;
+
+  getMax = () => this.getTotalPaginators() > this.getMaximumVisiblePaginators()
+        ? this.getMaximumVisiblePaginators()
+        : this.getTotalPaginators();
+
+  needToRenderArrows = () => this.getTotalPaginators() > this.getMax()
+
   goTo = pageIndex => {
     this.handleChangeCurrentPageIndex(pageIndex);
   };
@@ -136,10 +144,10 @@ class Pagimagic extends Component {
     );
   };
 
-  createIterator = (currentPage) => {
-    const HALF = Math.floor(this.props.maximumVisiblePaginators / 2);
+  createIterator = currentPage => {
+    const HALF = Math.floor(this.getMaximumVisiblePaginators() / 2);
     const TOTAL = this.getTotalPaginators();
-    const VISIBLE = TOTAL > this.props.maximumVisiblePaginators ? this.props.maximumVisiblePaginators : TOTAL;
+    const VISIBLE = TOTAL > this.getMaximumVisiblePaginators() ? this.getMaximumVisiblePaginators() : TOTAL;
     const TO_RENDER = VISIBLE - 3;
     const HALF_TO_RENDER = TO_RENDER/2;
 
@@ -150,7 +158,7 @@ class Pagimagic extends Component {
       if (i === 0) memo.push(i);
     };
     const makeEmpty = condition => memo => {
-      if (condition) memo.push('...');
+      if (this.needToRenderArrows() && condition) memo.push('...');
     };
     const makeLast = (memo, i) => {
       if (i + 1 === VISIBLE) memo.push(TOTAL - 1);
@@ -221,8 +229,9 @@ class Pagimagic extends Component {
         if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
         if (isNaN(pageIndex)) {
           return (
-            <p
+            <span
               key={pageIndex+i}
+              className={glue('Pagimagic', this.props.className)(['__break'])}
               style={
                 this.props.useDefaultStyles
                   ? {
@@ -240,7 +249,7 @@ class Pagimagic extends Component {
                   }
                   : {}
               }
-            >{pageIndex}</p>
+            >{pageIndex}</span>
           );
         }
         return (
@@ -281,7 +290,7 @@ class Pagimagic extends Component {
 
   render() {
     const { currentPage } = this.state;
-    const { itemsPerPage, maximumVisiblePaginators, renderChildren, list } = this.props;
+    const { itemsPerPage, renderChildren, list } = this.props;
     // where should splice starts
     const startList = currentPage * itemsPerPage;
     // where should splice ends
@@ -289,22 +298,16 @@ class Pagimagic extends Component {
     // elements which should to be shown
     const visibleList = targetList => targetList.slice(startList, endList);
 
-    const totalPaginators = this.getTotalPaginators();
-    const maxVisible =
-      totalPaginators > maximumVisiblePaginators
-        ? maximumVisiblePaginators
-        : totalPaginators;
-
     return (
       <div className={glue('Pagimagic', this.props.className)()}>
         {renderChildren(visibleList(list))}
 
         <nav className={glue('Pagimagic', this.props.className)(['__nav'])}>
           {
-            totalPaginators > maxVisible &&
+            this.needToRenderArrows() &&
             this.renderPrevNextButtons(
               currentPage,
-              totalPaginators,
+              this.getTotalPaginators(),
               this.onClickPrev
             )
           }
@@ -312,10 +315,10 @@ class Pagimagic extends Component {
           {this.renderPaginators()}
 
           {
-            totalPaginators > maxVisible &&
+            this.needToRenderArrows() &&
             this.renderPrevNextButtons(
               currentPage,
-              totalPaginators,
+              this.getTotalPaginators(),
               this.onClickNext,
               'next'
             )

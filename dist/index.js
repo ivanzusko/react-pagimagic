@@ -124,6 +124,18 @@
         return Math.ceil(_this.props.list.length / _this.props.itemsPerPage);
       };
 
+      _this.getMaximumVisiblePaginators = function () {
+        return _this.props.maximumVisiblePaginators;
+      };
+
+      _this.getMax = function () {
+        return _this.getTotalPaginators() > _this.getMaximumVisiblePaginators() ? _this.getMaximumVisiblePaginators() : _this.getTotalPaginators();
+      };
+
+      _this.needToRenderArrows = function () {
+        return _this.getTotalPaginators() > _this.getMax();
+      };
+
       _this.goTo = function (pageIndex) {
         _this.handleChangeCurrentPageIndex(pageIndex);
       };
@@ -188,9 +200,9 @@
       };
 
       _this.createIterator = function (currentPage) {
-        var HALF = Math.floor(_this.props.maximumVisiblePaginators / 2);
+        var HALF = Math.floor(_this.getMaximumVisiblePaginators() / 2);
         var TOTAL = _this.getTotalPaginators();
-        var VISIBLE = TOTAL > _this.props.maximumVisiblePaginators ? _this.props.maximumVisiblePaginators : TOTAL;
+        var VISIBLE = TOTAL > _this.getMaximumVisiblePaginators() ? _this.getMaximumVisiblePaginators() : TOTAL;
         var TO_RENDER = VISIBLE - 3;
         var HALF_TO_RENDER = TO_RENDER / 2;
 
@@ -206,7 +218,7 @@
         };
         var makeEmpty = function makeEmpty(condition) {
           return function (memo) {
-            if (condition) memo.push('...');
+            if (_this.needToRenderArrows() && condition) memo.push('...');
           };
         };
         var makeLast = function makeLast(memo, i) {
@@ -277,9 +289,10 @@
           if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
           if (isNaN(pageIndex)) {
             return _react2.default.createElement(
-              'p',
+              'span',
               {
                 key: pageIndex + i,
+                className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__break']),
                 style: _this.props.useDefaultStyles ? {
                   display: 'inline-block',
                   verticalAlign: 'middle',
@@ -345,7 +358,6 @@
         var currentPage = this.state.currentPage;
         var _props = this.props,
             itemsPerPage = _props.itemsPerPage,
-            maximumVisiblePaginators = _props.maximumVisiblePaginators,
             renderChildren = _props.renderChildren,
             list = _props.list;
 
@@ -358,9 +370,6 @@
           return targetList.slice(startList, endList);
         };
 
-        var totalPaginators = this.getTotalPaginators();
-        var maxVisible = totalPaginators > maximumVisiblePaginators ? maximumVisiblePaginators : totalPaginators;
-
         return _react2.default.createElement(
           'div',
           { className: (0, _glue2.default)('Pagimagic', this.props.className)() },
@@ -368,9 +377,9 @@
           _react2.default.createElement(
             'nav',
             { className: (0, _glue2.default)('Pagimagic', this.props.className)(['__nav']) },
-            totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickPrev),
+            this.needToRenderArrows() && this.renderPrevNextButtons(currentPage, this.getTotalPaginators(), this.onClickPrev),
             this.renderPaginators(),
-            totalPaginators > maxVisible && this.renderPrevNextButtons(currentPage, totalPaginators, this.onClickNext, 'next')
+            this.needToRenderArrows() && this.renderPrevNextButtons(currentPage, this.getTotalPaginators(), this.onClickNext, 'next')
           )
         );
       }
