@@ -179,9 +179,9 @@
               callbackFn(e);
             }
           },
-          _this.props.arrow && (0, _picklock.typeOf)(_this.props.arrow, 'function') ? _this.props.arrow() : _this.props.useDefaultStyles ? _react2.default.createElement(_DefaultArrow2.default, { next: forward === 'next' }) : _this.props.arrow ? _react2.default.createElement('span', { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward]) }) : _react2.default.createElement(
+          _this.props.arrow && (0, _picklock.typeOf)(_this.props.arrow, 'function') ? _this.props.arrow() : _this.props.useDefaultStyles ? _react2.default.createElement(_DefaultArrow2.default, { next: forward === 'next' }) : _this.props.arrow ? _react2.default.createElement('span', { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward, '__nav-arrow--' + disabled(direction)]) }) : _react2.default.createElement(
             'span',
-            { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward]), 'aria-hidden': 'true' },
+            { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward, '__nav-arrow--' + disabled(direction)]), 'aria-hidden': 'true' },
             forward
           )
         );
@@ -191,19 +191,79 @@
         var HALF = Math.floor(_this.props.maximumVisiblePaginators / 2);
         var TOTAL = _this.getTotalPaginators();
         var VISIBLE = TOTAL > _this.props.maximumVisiblePaginators ? _this.props.maximumVisiblePaginators : TOTAL;
+        var TO_RENDER = VISIBLE - 3;
+        var HALF_TO_RENDER = TO_RENDER / 2;
+
+        var make = function make(condition) {
+          return function (memo) {
+            return function (el) {
+              if (condition) memo.push(el);
+            };
+          };
+        };
+        var makeFirst = function makeFirst(memo, i) {
+          if (i === 0) memo.push(i);
+        };
+        var makeEmpty = function makeEmpty(condition) {
+          return function (memo) {
+            if (condition) memo.push('...');
+          };
+        };
+        var makeLast = function makeLast(memo, i) {
+          if (i + 1 === VISIBLE) memo.push(TOTAL - 1);
+        };
 
         return Array.apply(null, Array(VISIBLE)).reduce(function (memo, item, i) {
+          /**
+           * Stage 1 - till the middle
+           */
           if (currentPage + HALF < VISIBLE) {
-            memo.push(i);
-          } else if (currentPage + HALF === VISIBLE && VISIBLE !== TOTAL) {
-            memo.push(i + 1);
-          } else if (currentPage + HALF < TOTAL) {
-            var el = i + currentPage + HALF - VISIBLE + 1;
-            memo.push(el);
-          } else {
-            var _el = TOTAL - VISIBLE + i;
-            memo.push(_el);
+            make(i < VISIBLE - 1)(memo)(i);
+            makeEmpty(i >= VISIBLE - 1)(memo);
+            makeLast(memo, i);
           }
+          /**
+           * Stage 2 - when pagination starts moving
+           */
+          else if (currentPage + HALF === VISIBLE && VISIBLE !== TOTAL) {
+              makeFirst(memo, i);
+              make(i !== 0 && i !== VISIBLE - 1)(memo)(i);
+              makeEmpty(i > HALF && i + 1 === VISIBLE)(memo);
+              makeLast(memo, i);
+            }
+            /**
+             * Stage 3 - main part
+             */
+            else if (currentPage + HALF < TOTAL) {
+                var el = i + currentPage + HALF - VISIBLE + 1;
+
+                makeFirst(memo, i);
+                makeEmpty(el < currentPage - HALF_TO_RENDER)(memo);
+                make(el >= currentPage - HALF_TO_RENDER && el <= currentPage + HALF_TO_RENDER)(memo)(el);
+                makeEmpty(el > currentPage + HALF_TO_RENDER && el !== TOTAL - 1)(memo);
+                makeLast(memo, i);
+              }
+              /**
+               * Stage 4 - when last part rendered and we need just move active page indicator
+               */
+              else if (currentPage + 1 < TOTAL) {
+                  var renderingAmount = TOTAL - VISIBLE;
+                  var _el = renderingAmount + i;
+
+                  makeFirst(memo, i);
+                  makeEmpty(_el <= renderingAmount)(memo);
+                  make(_el > renderingAmount)(memo)(_el);
+                }
+                /**
+                 * Last Stage - last page of paginating
+                 */
+                else {
+                    var _el2 = TOTAL - VISIBLE + i;
+
+                    makeFirst(memo, i);
+                    makeEmpty(_el2 < currentPage - VISIBLE + 2)(memo);
+                    make(_el2 >= currentPage - VISIBLE + 2)(memo)(_el2);
+                  }
 
           return memo;
         }, []);
@@ -211,8 +271,32 @@
 
       _this.renderPaginators = function () {
         var currentPage = _this.state.currentPage;
+        var list = _this.createIterator(currentPage);
 
-        return _this.createIterator(currentPage).map(function (pageIndex) {
+        return list.map(function (pageIndex, i) {
+          if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
+          if (isNaN(pageIndex)) {
+            return _react2.default.createElement(
+              'p',
+              {
+                key: pageIndex + i,
+                style: _this.props.useDefaultStyles ? {
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                  lineHeight: '20px',
+                  width: '20px',
+                  height: '20px',
+                  border: 'solid 1px #000',
+                  borderRadius: '3px',
+                  textAlign: 'center',
+                  margin: '0 5px',
+                  backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
+                  color: currentPage === pageIndex ? '#fff' : '#000'
+                } : {}
+              },
+              pageIndex
+            );
+          }
           return _react2.default.createElement(
             'a',
             {
@@ -220,9 +304,9 @@
               style: _this.props.useDefaultStyles ? {
                 display: 'inline-block',
                 verticalAlign: 'middle',
-                lineHeight: '50px',
-                width: '50px',
-                height: '50px',
+                lineHeight: '20px',
+                width: '20px',
+                height: '20px',
                 border: 'solid 1px #000',
                 borderRadius: '3px',
                 textAlign: 'center',

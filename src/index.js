@@ -96,23 +96,23 @@ class Pagimagic extends Component {
       <div
         style={
           this.props.useDefaultStyles
-          ? {
-            display: 'inline-block',
-            cursor:
-            disabled(direction) === 'disabled'
-            ? 'not-allowed'
-            : 'pointer',
-            position: 'relative',
-            verticalAlign: 'middle',
-            width: '50px',
-            height: '50px',
-            opacity: disabled(direction) === 'disabled' ? '.3' : 1,
-          }
-          : {
-            display: 'inline-block',
-            cursor:
-            disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
-          }
+            ? {
+              display: 'inline-block',
+              cursor:
+              disabled(direction) === 'disabled'
+                ? 'not-allowed'
+                : 'pointer',
+              position: 'relative',
+              verticalAlign: 'middle',
+              width: '50px',
+              height: '50px',
+              opacity: disabled(direction) === 'disabled' ? '.3' : 1,
+            }
+            : {
+              display: 'inline-block',
+              cursor:
+              disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
+            }
         }
         className={
           glue('Pagimagic', this.props.className)(['__nav-item', `__nav-item--${forward}`, `__nav-item--${disabled(direction)}`])
@@ -123,14 +123,14 @@ class Pagimagic extends Component {
       >
         {
           this.props.arrow && typeOf(this.props.arrow, 'function')
-          	? this.props.arrow()
-          	: this.props.useDefaultStyles
-            	? <DefaultArrow next={forward === 'next'} />
-                : this.props.arrow
-                    ? <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])}></span>
-                    : <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])} aria-hidden="true">
-                        {forward}
-                      </span>
+            ? this.props.arrow()
+            : this.props.useDefaultStyles
+              ? <DefaultArrow next={forward === 'next'} />
+              : this.props.arrow
+                ? <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])}></span>
+                : <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])} aria-hidden="true">
+                  {forward}
+                </span>
         }
       </div>
     );
@@ -140,21 +140,72 @@ class Pagimagic extends Component {
     const HALF = Math.floor(this.props.maximumVisiblePaginators / 2);
     const TOTAL = this.getTotalPaginators();
     const VISIBLE = TOTAL > this.props.maximumVisiblePaginators ? this.props.maximumVisiblePaginators : TOTAL;
+    const TO_RENDER = VISIBLE - 3;
+    const HALF_TO_RENDER = TO_RENDER/2;
+
+    const make = condition => memo => el => {
+      if (condition) memo.push(el);
+    };
+    const makeFirst = (memo, i) => {
+      if (i === 0) memo.push(i);
+    };
+    const makeEmpty = condition => memo => {
+      if (condition) memo.push('...');
+    };
+    const makeLast = (memo, i) => {
+      if (i + 1 === VISIBLE) memo.push(TOTAL - 1);
+    };
 
     return Array.apply(null, Array(VISIBLE)).reduce((memo, item, i) => {
+      /**
+       * Stage 1 - till the middle
+       */
       if (currentPage + HALF < VISIBLE) {
-        memo.push(i);
+        make(i < VISIBLE - 1)(memo)(i);
+        makeEmpty(i >= VISIBLE - 1)(memo);
+        makeLast(memo, i);
       }
+      /**
+       * Stage 2 - when pagination starts moving
+       */
       else if (currentPage + HALF === VISIBLE && VISIBLE !== TOTAL) {
-        memo.push(i + 1);
+        makeFirst(memo, i);
+        make(i !== 0 && i !== VISIBLE - 1)(memo)(i);
+        makeEmpty(i > HALF && i + 1 === VISIBLE)(memo);
+        makeLast(memo, i);
       }
+      /**
+       * Stage 3 - main part
+       */
       else if (currentPage + HALF < TOTAL) {
         const el = (i + currentPage + HALF - VISIBLE + 1);
-        memo.push(el);
+
+        makeFirst(memo, i);
+        makeEmpty(el < currentPage - HALF_TO_RENDER)(memo);
+        make(el >= currentPage - HALF_TO_RENDER && el <= currentPage + HALF_TO_RENDER)(memo)(el);
+        makeEmpty(el > currentPage + HALF_TO_RENDER && el !== TOTAL - 1)(memo);
+        makeLast(memo, i);
       }
+      /**
+       * Stage 4 - when last part rendered and we need just move active page indicator
+       */
+      else if (currentPage + 1 < TOTAL) {
+        const renderingAmount = TOTAL - VISIBLE;
+        const el = renderingAmount + i;
+
+        makeFirst(memo, i);
+        makeEmpty(el <= renderingAmount)(memo);
+        make(el > renderingAmount)(memo)(el);
+      }
+      /**
+       * Last Stage - last page of paginating
+       */
       else {
         const el = TOTAL - VISIBLE + i;
-        memo.push(el);
+
+        makeFirst(memo, i);
+        makeEmpty(el < currentPage - VISIBLE + 2)(memo);
+        make(el >= currentPage - VISIBLE + 2)(memo)(el);
       }
 
       return memo;
@@ -163,9 +214,35 @@ class Pagimagic extends Component {
 
   renderPaginators = () => {
     const currentPage = this.state.currentPage;
+    const list = this.createIterator(currentPage);
 
     return (
-      this.createIterator(currentPage).map(pageIndex => {
+      list.map((pageIndex, i) => {
+        if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
+        if (isNaN(pageIndex)) {
+          return (
+            <p
+              key={pageIndex+i}
+              style={
+                this.props.useDefaultStyles
+                  ? {
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                    lineHeight: '20px',
+                    width: '20px',
+                    height: '20px',
+                    border: 'solid 1px #000',
+                    borderRadius: '3px',
+                    textAlign: 'center',
+                    margin: '0 5px',
+                    backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
+                    color: currentPage === pageIndex ? '#fff' : '#000',
+                  }
+                  : {}
+              }
+            >{pageIndex}</p>
+          );
+        }
         return (
           <a
             key={pageIndex}
@@ -174,9 +251,9 @@ class Pagimagic extends Component {
                 ? {
                   display: 'inline-block',
                   verticalAlign: 'middle',
-                  lineHeight: '50px',
-                  width: '50px',
-                  height: '50px',
+                  lineHeight: '20px',
+                  width: '20px',
+                  height: '20px',
                   border: 'solid 1px #000',
                   borderRadius: '3px',
                   textAlign: 'center',
@@ -220,28 +297,28 @@ class Pagimagic extends Component {
 
     return (
       <div className={glue('Pagimagic', this.props.className)()}>
-        { renderChildren(visibleList(list)) }
+        {renderChildren(visibleList(list))}
 
         <nav className={glue('Pagimagic', this.props.className)(['__nav'])}>
           {
             totalPaginators > maxVisible &&
-              this.renderPrevNextButtons(
-                currentPage,
-                totalPaginators,
-                this.onClickPrev
-              )
+            this.renderPrevNextButtons(
+              currentPage,
+              totalPaginators,
+              this.onClickPrev
+            )
           }
 
-          { this.renderPaginators() }
+          {this.renderPaginators()}
 
           {
             totalPaginators > maxVisible &&
-              this.renderPrevNextButtons(
-                currentPage,
-                totalPaginators,
-                this.onClickNext,
-                'next'
-              )
+            this.renderPrevNextButtons(
+              currentPage,
+              totalPaginators,
+              this.onClickNext,
+              'next'
+            )
           }
         </nav>
       </div>
