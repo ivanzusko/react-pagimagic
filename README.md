@@ -1,7 +1,7 @@
 # React component to create **pagination** from your list
 
 - Here is available a short [Demo](https://codesandbox.io/s/mj1wvx60jx).
-- [Usage with Redux](https://codesandbox.io/s/pYADWOoAV).
+- [Usage with Redux](https://codesandbox.io/s/7z06l4rr30).
 
 <p align="center">
   <a href="https://www.npmjs.com/package/react-pagimagic" target="_blank"><img src="https://img.shields.io/npm/v/react-pagimagic.svg"></a>
@@ -149,7 +149,7 @@ Property | Type | isRequired | Default value | Description
 
 ## Demo
 - Here is available a short [Demo](https://codesandbox.io/s/mj1wvx60jx).
-- [Usage with Redux](https://codesandbox.io/s/pYADWOoAV).
+- [Usage with Redux](https://codesandbox.io/s/7z06l4rr30).
 
 ## History
 You can get the [CHANGELOG](https://github.com/ivanzusko/react-pagimagic/blob/master/CHANGELOG.md)
