@@ -249,7 +249,9 @@ class Pagimagic extends Component {
                   }
                   : {}
               }
-            >{pageIndex}</span>
+            >
+              {pageIndex}
+            </span>
           );
         }
         return (

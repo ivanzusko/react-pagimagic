@@ -58,7 +58,7 @@ const YourComponent = (props) => {
       itemsPerPage={10}
       currentPageIndex={0}
       className="your-class-if-its-necessary"
-      maximumVisiblePaginators={5}
+      maximumVisiblePaginators={5} // the best minimum to be displayed
       renderChildren={this.yourRenderLogic}
     />
   );
