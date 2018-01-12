@@ -179,7 +179,6 @@ class Pagimagic extends Component {
        */
       else if (currentPage + HALF < TOTAL) {
         const el = (i + currentPage + HALF - VISIBLE + 1);
-        console.error('(3)', el);
 
         makeFirst(memo, i);
         makeEmpty(el < currentPage - HALF_TO_RENDER)(memo);

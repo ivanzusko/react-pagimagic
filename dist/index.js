@@ -213,7 +213,7 @@
           if (i + 1 === VISIBLE) memo.push(TOTAL - 1);
         };
 
-        var j1 = Array.apply(null, Array(VISIBLE)).reduce(function (memo, item, i) {
+        return Array.apply(null, Array(VISIBLE)).reduce(function (memo, item, i) {
           /**
            * Stage 1 - till the middle
            */
@@ -236,7 +236,6 @@
              */
             else if (currentPage + HALF < TOTAL) {
                 var el = i + currentPage + HALF - VISIBLE + 1;
-                console.error('(3)', el);
 
                 makeFirst(memo, i);
                 makeEmpty(el < currentPage - HALF_TO_RENDER)(memo);
@@ -268,8 +267,6 @@
 
           return memo;
         }, []);
-
-        return j1;
       };
 
       _this.renderPaginators = function () {
