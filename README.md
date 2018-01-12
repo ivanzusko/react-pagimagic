@@ -1,6 +1,6 @@
 # React component to create **pagination** from your list
 
-- Here is available a short [Demo](https://codesandbox.io/s/mw2Ojlm73).
+- Here is available a short [Demo](https://codesandbox.io/s/mj1wvx60jx).
 - [Usage with Redux](https://codesandbox.io/s/pYADWOoAV).
 
 <p align="center">
@@ -148,7 +148,7 @@ Property | Type | isRequired | Default value | Description
 `useDefaultStyles` | Boolean | no | `false` | You can use very basic default styles by passing `useDefaultStyles` property. Without passing this prop you will get naked pagination. 
 
 ## Demo
-- Here is available a short [Demo](https://codesandbox.io/s/mw2Ojlm73).
+- Here is available a short [Demo](https://codesandbox.io/s/mj1wvx60jx).
 - [Usage with Redux](https://codesandbox.io/s/pYADWOoAV).
 
 ## History

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v1.1.3
+- Added pagination breaker: `<` 1 ... 4 **6** 7 ... 13 `>`
+
 ## v1.0.0
 - `className` which you pass as a property now will render in all components side by side with `Pagimagic` class. E.g: if you are passing __your-class__ via `className`, than whole block will have `class="Pagimagic your-class"` and in same maner the others will render: `Pagimagic__nav` will become `class="Pagimagic__nav your-class__nav"` and so on.
 
