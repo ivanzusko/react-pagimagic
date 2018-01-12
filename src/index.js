@@ -221,8 +221,9 @@ class Pagimagic extends Component {
         if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
         if (isNaN(pageIndex)) {
           return (
-            <p
+            <span
               key={pageIndex+i}
+              className={glue('Pagimagic', this.props.className)(['__break'])}
               style={
                 this.props.useDefaultStyles
                   ? {
@@ -240,7 +241,9 @@ class Pagimagic extends Component {
                   }
                   : {}
               }
-            >{pageIndex}</p>
+            >
+              {pageIndex}
+            </span>
           );
         }
         return (

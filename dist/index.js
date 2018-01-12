@@ -277,9 +277,10 @@
           if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
           if (isNaN(pageIndex)) {
             return _react2.default.createElement(
-              'p',
+              'span',
               {
                 key: pageIndex + i,
+                className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__break']),
                 style: _this.props.useDefaultStyles ? {
                   display: 'inline-block',
                   verticalAlign: 'middle',
