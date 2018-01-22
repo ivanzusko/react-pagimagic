@@ -68,7 +68,5 @@
       "\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js"
     }
   },
-  "dependencies": {
-    "picklock": "^0.5.1"
-  }
+  "dependencies": {}
 }
