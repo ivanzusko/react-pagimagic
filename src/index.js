@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { typeOf } from 'picklock';
 
 import glue from './glue';
 import DefaultArrow from './DefaultArrow';
@@ -145,7 +144,7 @@ class Pagimagic extends Component {
         }}
       >
         {
-          this.props.arrow && typeOf(this.props.arrow, 'function')
+          this.props.arrow && typeof this.props.arrow === 'function'
             ? this.props.arrow()
             : this.props.useDefaultStyles
               ? <DefaultArrow next={forward === 'next'} />

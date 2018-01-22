@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['exports', 'react', 'prop-types', 'picklock', './glue', './DefaultArrow'], factory);
+    define(['exports', 'react', 'prop-types', './glue', './DefaultArrow'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('react'), require('prop-types'), require('picklock'), require('./glue'), require('./DefaultArrow'));
+    factory(exports, require('react'), require('prop-types'), require('./glue'), require('./DefaultArrow'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react, global.propTypes, global.picklock, global.glue, global.DefaultArrow);
+    factory(mod.exports, global.react, global.propTypes, global.glue, global.DefaultArrow);
     global.index = mod.exports;
   }
-})(this, function (exports, _react, _propTypes, _picklock, _glue, _DefaultArrow) {
+})(this, function (exports, _react, _propTypes, _glue, _DefaultArrow) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -215,7 +215,7 @@
               callbackFn(e);
             }
           },
-          _this.props.arrow && (0, _picklock.typeOf)(_this.props.arrow, 'function') ? _this.props.arrow() : _this.props.useDefaultStyles ? _react2.default.createElement(_DefaultArrow2.default, { next: forward === 'next' }) : _this.props.arrow ? _react2.default.createElement('span', { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward, '__nav-arrow--' + disabled(direction)]) }) : _react2.default.createElement(
+          _this.props.arrow && typeof _this.props.arrow === 'function' ? _this.props.arrow() : _this.props.useDefaultStyles ? _react2.default.createElement(_DefaultArrow2.default, { next: forward === 'next' }) : _this.props.arrow ? _react2.default.createElement('span', { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward, '__nav-arrow--' + disabled(direction)]) }) : _react2.default.createElement(
             'span',
             { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward, '__nav-arrow--' + disabled(direction)]), 'aria-hidden': 'true' },
             forward

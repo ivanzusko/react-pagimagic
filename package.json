@@ -1,6 +1,6 @@
 {
   "name": "react-pagimagic",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "React component to create pagination from your list",
   "repository": {
     "type": "git",
@@ -68,7 +68,5 @@
       "\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js"
     }
   },
-  "dependencies": {
-    "picklock": "^0.5.1"
-  }
+  "dependencies": {}
 }
