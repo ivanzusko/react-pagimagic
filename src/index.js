@@ -32,13 +32,19 @@ class Pagimagic extends Component {
 
     this.state = {
       currentPage: this.props.currentPageIndex,
+      lastPageIndex: null,
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.currentPageIndex !== this.props.currentPageIndex) {
-      this.setState(() => ({ currentPage: nextProps.currentPageIndex }));
+  static getDerivedStateFromProps(props, state) {
+    if (props.currentPageIndex !== state.lastPageIndex) {
+      return {
+        currentPage: props.currentPageIndex,
+        lastPageIndex: props.currentPageIndex
+      };
     }
+
+    return null;
   }
 
   handleChangeCurrentPageIndex = (pageIndex) => {
