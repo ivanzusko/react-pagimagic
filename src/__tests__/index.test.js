@@ -1,21 +1,27 @@
-import React, { Component } from 'react';
-import { shallow } from 'enzyme';
+import React from 'react';
+import {render} from '@testing-library/react';
 
 import Pagimagic from '../index';
 
-describe('YourComponent', () => {
+describe('Pagimagic', () => {
   describe('#render', () => {
+    const spyRenderFn = jest.fn();
+
     it('should render without crashing', () => {
       const props = {
-        list: ['Sofiia', 'Anna'],
+        list: ['Sofiia', 'Anna', 'Fedir', 'Emilia'],
         itemsPerPage: 2,
         currentPageIndex: 0,
         maximumVisiblePaginators: 3,
-        renderChildren: jest.fn(),
+        renderChildren: spyRenderFn,
+        showCounter: true,
+        className: 'test-classname'
       };
-      const wrapper = shallow(<Pagimagic {...props} />);
+      const { getByText } = render(<Pagimagic {...props} />);
 
-      expect(wrapper.find('.Pagimagic').length).toBe(1);
+      expect(getByText('1')).toBeTruthy();
+      expect(getByText('2')).toBeTruthy();
+      expect(getByText('1-2 of 4')).toBeTruthy();
     });
   });
 });

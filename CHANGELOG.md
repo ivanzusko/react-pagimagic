@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## v2.0.0 (May 1, 2024)
+- Upgrade to React 18
+- Replace `enzyme` with `@testing-library/react`
+- Increase test coverage
+
+## v1.4.0 (January 13, 2018)
+- Fix for counter
+- Remove redundant dependancy
+
+## v1.3.1
+- Fix for counter
+- Update docs
+
 ## v1.3.0
 - Added counter. E.g.: `1-10 of 293`
 
