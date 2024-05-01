@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(['exports', 'react', 'prop-types', './glue', './DefaultArrow'], factory);
+    define(['exports', 'react', 'prop-types', './glue', './PrevNextButtons', './Counter', './Paginator'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('react'), require('prop-types'), require('./glue'), require('./DefaultArrow'));
+    factory(exports, require('react'), require('prop-types'), require('./glue'), require('./PrevNextButtons'), require('./Counter'), require('./Paginator'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.react, global.propTypes, global.glue, global.DefaultArrow);
+    factory(mod.exports, global.react, global.propTypes, global.glue, global.PrevNextButtons, global.Counter, global.Paginator);
     global.index = mod.exports;
   }
-})(this, function (exports, _react, _propTypes, _glue, _DefaultArrow) {
+})(this, function (exports, _react, _propTypes, _glue, _PrevNextButtons, _Counter, _Paginator) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -23,7 +23,11 @@
 
   var _glue2 = _interopRequireDefault(_glue);
 
-  var _DefaultArrow2 = _interopRequireDefault(_DefaultArrow);
+  var _PrevNextButtons2 = _interopRequireDefault(_PrevNextButtons);
+
+  var _Counter2 = _interopRequireDefault(_Counter);
+
+  var _Paginator2 = _interopRequireDefault(_Paginator);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
@@ -186,43 +190,6 @@
         }
       };
 
-      _this.renderPrevNextButtons = function (currentPage, totalPaginators, callbackFn, direction) {
-        var forward = direction === 'next' ? 'next' : 'prev';
-        var disabled = function disabled(direction) {
-          if (direction === 'next') {
-            return currentPage + 1 === totalPaginators ? 'disabled' : '';
-          }
-          return currentPage === 0 ? 'disabled' : '';
-        };
-
-        return _react2.default.createElement(
-          'div',
-          {
-            style: _this.props.useDefaultStyles ? {
-              display: 'inline-block',
-              cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
-              position: 'relative',
-              verticalAlign: 'middle',
-              width: '50px',
-              height: '50px',
-              opacity: disabled(direction) === 'disabled' ? '.3' : 1
-            } : {
-              display: 'inline-block',
-              cursor: disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer'
-            },
-            className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-item', '__nav-item--' + forward, '__nav-item--' + disabled(direction)]),
-            onClick: function onClick(e) {
-              callbackFn(e);
-            }
-          },
-          _this.props.arrow && typeof _this.props.arrow === 'function' ? _this.props.arrow() : _this.props.useDefaultStyles ? _react2.default.createElement(_DefaultArrow2.default, { next: forward === 'next' }) : _this.props.arrow ? _react2.default.createElement('span', { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward, '__nav-arrow--' + disabled(direction)]) }) : _react2.default.createElement(
-            'span',
-            { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-arrow', '__nav-arrow--' + forward, '__nav-arrow--' + disabled(direction)]), 'aria-hidden': 'true' },
-            forward
-          )
-        );
-      };
-
       _this.createIterator = function (currentPage) {
         var HALF = Math.floor(_this.getMaximumVisiblePaginators() / 2);
         var TOTAL = _this.getTotalPaginators();
@@ -305,93 +272,14 @@
         }, []);
       };
 
-      _this.renderPaginators = function () {
-        var currentPage = _this.state.currentPage;
-        var list = _this.createIterator(currentPage);
-
-        return list.map(function (pageIndex, i) {
-          if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
-          if (isNaN(pageIndex)) {
-            return _react2.default.createElement(
-              'span',
-              {
-                key: pageIndex + i,
-                className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__break']),
-                style: _this.props.useDefaultStyles ? {
-                  display: 'inline-block',
-                  verticalAlign: 'middle',
-                  lineHeight: '20px',
-                  width: '20px',
-                  height: '20px',
-                  border: 'solid 1px #000',
-                  borderRadius: '3px',
-                  textAlign: 'center',
-                  margin: '0 5px',
-                  backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-                  color: currentPage === pageIndex ? '#fff' : '#000'
-                } : {}
-              },
-              pageIndex
-            );
-          }
-          return _react2.default.createElement(
-            'a',
-            {
-              key: pageIndex,
-              style: _this.props.useDefaultStyles ? {
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                lineHeight: '20px',
-                width: '20px',
-                height: '20px',
-                border: 'solid 1px #000',
-                borderRadius: '3px',
-                textAlign: 'center',
-                margin: '0 5px',
-                backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-                color: currentPage === pageIndex ? '#fff' : '#000'
-              } : {},
-              onClick: function onClick() {
-                _this.goTo(pageIndex);
-              },
-              className: currentPage === pageIndex ? (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-item', '__nav-item--active']) : (0, _glue2.default)('Pagimagic', _this.props.className)(['__nav-item'])
-            },
-            pageIndex + 1
-          );
-        });
-      };
-
-      _this.renderCounter = function () {
-        var from = _this.startList() + 1;
-        var listLength = _this.getVisibleList().length;
-        var to = from + listLength - 1;
-        var all = _this.getList().length;
-
-        return _react2.default.createElement(
-          'div',
-          { className: (0, _glue2.default)('Pagimagic', _this.props.className)(['__counter']) },
-          '' + from + (from === to ? '' : '-' + to),
-          ' of ',
-          all
-        );
-      };
-
       _this.state = {
-        currentPage: _this.props.currentPageIndex
+        currentPage: _this.props.currentPageIndex,
+        lastPageIndex: null
       };
       return _this;
     }
 
     _createClass(Pagimagic, [{
-      key: 'componentWillReceiveProps',
-      value: function componentWillReceiveProps(nextProps) {
-        if (nextProps.currentPageIndex !== this.props.currentPageIndex) {
-          this.setState(function () {
-            return { currentPage: nextProps.currentPageIndex };
-          });
-        }
-      }
-    }, {
       key: 'render',
       value: function render() {
         var renderChildren = this.props.renderChildren;
@@ -404,12 +292,50 @@
           _react2.default.createElement(
             'nav',
             { className: (0, _glue2.default)('Pagimagic', this.props.className)(['__nav']) },
-            this.needToRenderArrows() && this.renderPrevNextButtons(this.getCurrentPage(), this.getTotalPaginators(), this.onClickPrev),
-            this.renderPaginators(),
-            this.needToRenderArrows() && this.renderPrevNextButtons(this.getCurrentPage(), this.getTotalPaginators(), this.onClickNext, 'next')
+            this.needToRenderArrows() && _react2.default.createElement(_PrevNextButtons2.default, {
+              currentPage: this.getCurrentPage(),
+              totalPaginators: this.getTotalPaginators(),
+              callbackFn: this.onClickPrev,
+              useDefaultStyles: this.props.useDefaultStyles,
+              arrow: this.props.arrow,
+              className: this.props.className
+            }),
+            _react2.default.createElement(_Paginator2.default, {
+              className: this.props.className,
+              list: this.createIterator(this.state.currentPage),
+              currentPage: this.state.currentPage,
+              goTo: this.goTo,
+              useDefaultStyles: this.props.useDefaultStyles
+            }),
+            this.needToRenderArrows() && _react2.default.createElement(_PrevNextButtons2.default, {
+              currentPage: this.getCurrentPage(),
+              totalPaginators: this.getTotalPaginators(),
+              callbackFn: this.onClickNext,
+              direction: 'next',
+              useDefaultStyles: this.props.useDefaultStyles,
+              arrow: this.props.arrow,
+              className: this.props.className
+            })
           ),
-          this.needToShowCounter() && this.renderCounter()
+          this.needToShowCounter() && _react2.default.createElement(_Counter2.default, {
+            className: this.props.className,
+            from: this.startList() + 1,
+            listLength: this.getVisibleList().length,
+            all: this.getList().length
+          })
         );
+      }
+    }], [{
+      key: 'getDerivedStateFromProps',
+      value: function getDerivedStateFromProps(props, state) {
+        if (props.currentPageIndex !== state.lastPageIndex) {
+          return {
+            currentPage: props.currentPageIndex,
+            lastPageIndex: props.currentPageIndex
+          };
+        }
+
+        return null;
       }
     }]);
 

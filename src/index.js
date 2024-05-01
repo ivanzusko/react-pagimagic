@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import glue from './glue';
-import DefaultArrow from './DefaultArrow';
+import PrevNextButtons from './PrevNextButtons';
+import Counter from './Counter';
+import Paginator from './Paginator';
 
 const propTypes = {
   // list of items
@@ -106,64 +108,6 @@ class Pagimagic extends Component {
     }
   };
 
-  renderPrevNextButtons = (
-    currentPage,
-    totalPaginators,
-    callbackFn,
-    direction
-  ) => {
-    const forward = direction === 'next' ? 'next' : 'prev';
-    const disabled = direction => {
-      if (direction === 'next') {
-        return currentPage + 1 === totalPaginators ? 'disabled' : '';
-      }
-      return currentPage === 0 ? 'disabled' : '';
-    };
-
-    return (
-      <div
-        style={
-          this.props.useDefaultStyles
-            ? {
-              display: 'inline-block',
-              cursor:
-              disabled(direction) === 'disabled'
-                ? 'not-allowed'
-                : 'pointer',
-              position: 'relative',
-              verticalAlign: 'middle',
-              width: '50px',
-              height: '50px',
-              opacity: disabled(direction) === 'disabled' ? '.3' : 1,
-            }
-            : {
-              display: 'inline-block',
-              cursor:
-              disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer',
-            }
-        }
-        className={
-          glue('Pagimagic', this.props.className)(['__nav-item', `__nav-item--${forward}`, `__nav-item--${disabled(direction)}`])
-        }
-        onClick={e => {
-          callbackFn(e);
-        }}
-      >
-        {
-          this.props.arrow && typeof this.props.arrow === 'function'
-            ? this.props.arrow()
-            : this.props.useDefaultStyles
-              ? <DefaultArrow next={forward === 'next'} />
-              : this.props.arrow
-                ? <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])}></span>
-                : <span className={glue('Pagimagic', this.props.className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])} aria-hidden="true">
-                  {forward}
-                </span>
-        }
-      </div>
-    );
-  };
-
   createIterator = currentPage => {
     const HALF = Math.floor(this.getMaximumVisiblePaginators() / 2);
     const TOTAL = this.getTotalPaginators();
@@ -240,89 +184,6 @@ class Pagimagic extends Component {
     }, []);
   };
 
-  renderPaginators = () => {
-    const currentPage = this.state.currentPage;
-    const list = this.createIterator(currentPage);
-
-    return (
-      list.map((pageIndex, i) => {
-        if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
-        if (isNaN(pageIndex)) {
-          return (
-            <span
-              key={pageIndex+i}
-              className={glue('Pagimagic', this.props.className)(['__break'])}
-              style={
-                this.props.useDefaultStyles
-                  ? {
-                    display: 'inline-block',
-                    verticalAlign: 'middle',
-                    lineHeight: '20px',
-                    width: '20px',
-                    height: '20px',
-                    border: 'solid 1px #000',
-                    borderRadius: '3px',
-                    textAlign: 'center',
-                    margin: '0 5px',
-                    backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-                    color: currentPage === pageIndex ? '#fff' : '#000',
-                  }
-                  : {}
-              }
-            >
-              {pageIndex}
-            </span>
-          );
-        }
-        return (
-          <a
-            key={pageIndex}
-            style={
-              this.props.useDefaultStyles
-                ? {
-                  display: 'inline-block',
-                  verticalAlign: 'middle',
-                  lineHeight: '20px',
-                  width: '20px',
-                  height: '20px',
-                  border: 'solid 1px #000',
-                  borderRadius: '3px',
-                  textAlign: 'center',
-                  margin: '0 5px',
-                  backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-                  color: currentPage === pageIndex ? '#fff' : '#000',
-                }
-                : {}
-            }
-            onClick={() => {
-              this.goTo(pageIndex);
-            }}
-            className={
-              currentPage === pageIndex
-                ? glue('Pagimagic', this.props.className)(['__nav-item', '__nav-item--active'])
-                : glue('Pagimagic', this.props.className)(['__nav-item'])
-            }
-          >
-            {pageIndex + 1}
-          </a>
-        );
-      })
-    );
-  };
-
-  renderCounter = () => {
-    const from = this.startList() + 1;
-    const listLength = this.getVisibleList().length;
-    const to = from + listLength - 1;
-    const all = this.getList().length;
-
-    return (
-      <div className={glue('Pagimagic', this.props.className)(['__counter'])}>
-        {`${from}${from === to ? '' : '-'+to}`} of {all}
-      </div>
-    );
-  }
-
   render() {
     const { renderChildren } = this.props;
 
@@ -333,28 +194,45 @@ class Pagimagic extends Component {
         <nav className={glue('Pagimagic', this.props.className)(['__nav'])}>
           {
             this.needToRenderArrows() &&
-            this.renderPrevNextButtons(
-              this.getCurrentPage(),
-              this.getTotalPaginators(),
-              this.onClickPrev
-            )
+            <PrevNextButtons
+              currentPage={this.getCurrentPage()}
+              totalPaginators={this.getTotalPaginators()}
+              callbackFn={this.onClickPrev}
+              useDefaultStyles={this.props.useDefaultStyles}
+              arrow={this.props.arrow}
+              className={this.props.className}
+            />
           }
 
-          {this.renderPaginators()}
+          <Paginator
+            className={this.props.className}
+            list={this.createIterator(this.state.currentPage)}
+            currentPage={this.state.currentPage}
+            goTo={this.goTo}
+            useDefaultStyles={this.props.useDefaultStyles}
+          />
 
           {
             this.needToRenderArrows() &&
-            this.renderPrevNextButtons(
-              this.getCurrentPage(),
-              this.getTotalPaginators(),
-              this.onClickNext,
-              'next'
-            )
+            <PrevNextButtons
+              currentPage={this.getCurrentPage()}
+              totalPaginators={this.getTotalPaginators()}
+              callbackFn={this.onClickNext}
+              direction='next'
+              useDefaultStyles={this.props.useDefaultStyles}
+              arrow={this.props.arrow}
+              className={this.props.className}
+            />
           }
         </nav>
         {
           this.needToShowCounter() &&
-            this.renderCounter()
+            <Counter
+              className={this.props.className}
+              from={this.startList() + 1}
+              listLength={this.getVisibleList().length}
+              all={this.getList().length}
+            />
         }
       </div>
     );

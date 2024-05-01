@@ -1,32 +1,28 @@
 import React from 'react';
 
-const styles = {
-  arrow: next => ({
-    position: 'absolute',
-    display: 'inline-block',
-    width: '50px',
-    height: '50px',
-    top: 0,
-    left: 0,
-    transform: next ? 'none' : 'rotate(-180deg)',
-  }),
-  svg: () => ({
-    display: 'inline-block',
-    width: '100%',
-  }),
-};
-
 const DefaultArrow = ({ next }) => {
   return (
     <span
       className="Pagimagic-nav-arrow"
-      style={styles.arrow(next)}
+      data-testid="Pagimagic-nav-arrow-default"
+      style={{
+        position: 'absolute',
+        display: 'inline-block',
+        width: '50px',
+        height: '50px',
+        top: 0,
+        left: 0,
+        transform: next ? 'none' : 'rotate(-180deg)',
+      }}
     >
       <svg
         x="0px"
         y="0px"
         viewBox="0 0 240.823 240.823"
-        style={styles.svg()}
+        style={{
+          display: 'inline-block',
+          width: '100%',
+        }}
       >
         <g>
           <path 
