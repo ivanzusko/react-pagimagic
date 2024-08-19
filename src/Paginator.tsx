@@ -1,8 +1,8 @@
 import React from 'react';
-
 import glue from './glue';
+import { PaginationIterator } from './types/definitions';
 
-const Paginator = ({
+export default function Paginator({
   className,
   list,
   currentPage,
@@ -10,12 +10,58 @@ const Paginator = ({
   useDefaultStyles,
 }: {
   className?: string;
-  list: any;
+  list: PaginationIterator;
   currentPage: number;
   goTo: (pageIndex: number) => void;
   useDefaultStyles: any;
-}) => {
-  const defaultStyles = (pageIndex: number) => ({
+}) {
+  return (
+    list.map((pageIndex, i: number) => {
+      // check if it is '...'
+      if (typeof pageIndex !== 'number') {
+        if (typeof list[i - 1] !== 'number') return false;
+
+        return (
+          <span
+            key={`${pageIndex}${i}`}
+            className={glue('Pagimagic', className)(['__break'])}
+            style={
+              useDefaultStyles
+                ? getDefaultStyles(false)
+                : {}
+            }
+          >
+            {pageIndex}
+          </span>
+        );
+      } else {
+        return (
+          <a
+            key={pageIndex}
+            style={
+              useDefaultStyles
+                ? getDefaultStyles(currentPage === pageIndex)
+                : {}
+            }
+            onClick={() => {
+              goTo(pageIndex);
+            }}
+            className={
+              currentPage === pageIndex
+                ? glue('Pagimagic', className)(['__nav-item', '__nav-item--active'])
+                : glue('Pagimagic', className)(['__nav-item'])
+            }
+          >
+            {pageIndex + 1}
+          </a>
+        );
+      }
+    })
+  );
+};
+
+function getDefaultStyles(isActivePage: boolean) {
+  return {
     display: 'inline-block',
     verticalAlign: 'middle',
     lineHeight: '40px',
@@ -26,52 +72,8 @@ const Paginator = ({
     borderRadius: '3px',
     textAlign: 'center',
     margin: '0 5px',
-    backgroundColor: currentPage === pageIndex ? '#000' : '#fff',
-    color: currentPage === pageIndex ? '#fff' : '#000',
+    backgroundColor: isActivePage ? '#000' : '#fff',
+    color: isActivePage ? '#fff' : '#000',
     cursor: 'pointer',
-  });
-
-  return (
-    //@ts-ignore
-    list.map((pageIndex, i: number) => {
-      if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
-      if (isNaN(pageIndex)) {
-        return (
-          <span
-            key={pageIndex+i}
-            className={glue('Pagimagic', className)(['__break'])}
-            style={
-              useDefaultStyles
-                ? defaultStyles(pageIndex)
-                : {}
-            }
-          >
-            {pageIndex}
-          </span>
-        );
-      }
-      return (
-        <a
-          key={pageIndex}
-          style={
-            useDefaultStyles
-              ? defaultStyles(pageIndex)
-              : {}
-          }
-          onClick={() => {
-            goTo(pageIndex);
-          }}
-          className={
-            currentPage === pageIndex
-              ? glue('Pagimagic', className)(['__nav-item', '__nav-item--active'])
-              : glue('Pagimagic', className)(['__nav-item'])
-          }
-        >
-          {pageIndex + 1}
-        </a>
-      );
-    })
-  );
-};
-
-export default Paginator;
+  }
+}

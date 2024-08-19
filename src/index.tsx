@@ -4,6 +4,7 @@ import glue from './glue';
 import PrevNextButtons from './PrevNextButtons';
 import Counter from './Counter';
 import Paginator from './Paginator';
+import { PaginationIterator } from './types/definitions';
 
 interface Props {
   className?: string;
@@ -114,7 +115,7 @@ class Pagimagic extends Component<Props, State> {
     }
   };
 
-  createIterator = (currentPage: number) => {
+  createIterator = (currentPage: number): PaginationIterator => {
     const HALF = Math.floor(this.getMaximumVisiblePaginators() / 2);
     const TOTAL = this.getTotalPaginators();
     const VISIBLE = TOTAL > this.getMaximumVisiblePaginators() ? this.getMaximumVisiblePaginators() : TOTAL;
@@ -135,7 +136,7 @@ class Pagimagic extends Component<Props, State> {
       if (i + 1 === VISIBLE) memo.push(TOTAL - 1);
     };
 
-    return Array.apply(null, Array(VISIBLE)).reduce((memo, item, i) => {
+    const result = Array.apply(null, Array(VISIBLE)).reduce((memo, item, i) => {
       /**
        * Stage 1 - till the middle
        */
@@ -202,6 +203,8 @@ class Pagimagic extends Component<Props, State> {
 
       return memo;
     }, []);
+
+    return result as PaginationIterator;
   };
 
   render() {

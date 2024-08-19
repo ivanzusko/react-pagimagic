@@ -1,7 +1,7 @@
 import React from 'react';
-
 import glue from './glue';
 import DefaultArrow from './DefaultArrow';
+import { PrevNext } from './types/definitions';
 
 export default function PrevNextButtons({
   currentPage,
@@ -15,13 +15,13 @@ export default function PrevNextButtons({
   currentPage: any;
   totalPaginators: any;
   callbackFn: any;
-  direction?: 'next' | 'prev';
+  direction?: PrevNext;
   useDefaultStyles: any;
   arrow: any;
   className: any;
 }) {
   const forward = direction === 'next' ? 'next' : 'prev';
-  const disabled = (direction?: 'next' | 'prev') => {
+  const disabled = (direction?: PrevNext) => {
     if (direction === 'next') {
       return currentPage + 1 === totalPaginators ? 'disabled' : '';
     }
