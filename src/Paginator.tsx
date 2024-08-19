@@ -13,7 +13,7 @@ export default function Paginator({
   list: PaginationIterator;
   currentPage: number;
   goTo: (pageIndex: number) => void;
-  useDefaultStyles: any;
+  useDefaultStyles?: boolean;
 }) {
   return (
     list.map((pageIndex, i: number) => {

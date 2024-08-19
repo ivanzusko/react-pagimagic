@@ -9,9 +9,9 @@ const Counter = ({
   all,
 } : {
   className?: string;
-  from: any;
-  listLength: any;
-  all: any;
+  from: number;
+  listLength: number;
+  all: number;
 }) => {
   const to = from + listLength - 1;
 

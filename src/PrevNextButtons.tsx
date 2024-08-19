@@ -12,13 +12,13 @@ export default function PrevNextButtons({
   arrow,
   className,
 }: {
-  currentPage: any;
-  totalPaginators: any;
-  callbackFn: any;
+  currentPage: number;
+  totalPaginators: number;
+  callbackFn:  (event: React.MouseEvent) => void;
   direction?: PrevNext;
-  useDefaultStyles: any;
-  arrow: any;
-  className: any;
+  useDefaultStyles?: boolean;
+  arrow?: () => JSX.Element;
+  className?: string;
 }) {
   const forward = direction === 'next' ? 'next' : 'prev';
   const disabled = (direction?: PrevNext) => {
