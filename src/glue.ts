@@ -1,9 +1,9 @@
-const glue = (className, johnny) => mods => {
-  const arr = johnny ? [className, johnny] : [className];
+const glue = (className: string, externalClassName?: string) => (mods?: any) => {
+  const arr = externalClassName ? [className, externalClassName] : [className];
   
   if (mods) {
     return arr.reduce((memo, item) => {
-      const cry = mods.reduce((memo1, item1) => {
+      const cry = mods.reduce((memo1: string[], item1: string) => {
         memo1.push(item + item1);
 
         return memo1;

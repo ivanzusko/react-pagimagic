@@ -1,44 +1,50 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import glue from './glue';
 import PrevNextButtons from './PrevNextButtons';
 import Counter from './Counter';
 import Paginator from './Paginator';
 
-const propTypes = {
+interface Props {
+  className?: string;
   // list of items
-  list: PropTypes.array.isRequired,
+  list: any[];
   // how many items will be shown on one page
-  itemsPerPage: PropTypes.number.isRequired,
+  itemsPerPage:  number;
   // index of the current page
-  currentPageIndex: PropTypes.number.isRequired,
+  currentPageIndex: number;
   // handler to change current page index (e.g. in case of using Redux):
-  changePageIndex: PropTypes.func,
+  changePageIndex?: (pageIndex: number) => void;
   // how many(max) paginator buttons with numbers should be shown:
-  maximumVisiblePaginators: PropTypes.number.isRequired,
+  maximumVisiblePaginators: number;
   // render callback:
-  renderChildren: PropTypes.func.isRequired,
+  renderChildren: (children: any[]) => React.ReactNode,
   // custom arrow element/component (if not specified
   // Pagimagic will render it's own <span>:
-  arrow: PropTypes.any,
+  arrow?: any,
   // should counter (e.g.: item 1-10 of 213) be displayed or not
-  showCounter: PropTypes.bool,
+  showCounter?: boolean;
   // if you don't want to specify/apply your own styles:
-  useDefaultStyles: PropTypes.bool,
+  useDefaultStyles?: boolean;
 };
 
-class Pagimagic extends Component {
-  constructor(props) {
+interface State {
+  currentPage: number;
+  lastPageIndex: number | null;
+}
+
+class Pagimagic extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
+      // @ts-ignore
       currentPage: this.props.currentPageIndex,
       lastPageIndex: null,
     };
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props: Props, state: State) {
     if (props.currentPageIndex !== state.lastPageIndex) {
       return {
         currentPage: props.currentPageIndex,
@@ -49,7 +55,7 @@ class Pagimagic extends Component {
     return null;
   }
 
-  handleChangeCurrentPageIndex = (pageIndex) => {
+  handleChangeCurrentPageIndex = (pageIndex: number) => {
     if (this.props.changePageIndex) {
       this.props.changePageIndex(pageIndex);
       this.setState(() => ({ currentPage: pageIndex }));
@@ -78,7 +84,7 @@ class Pagimagic extends Component {
   endList = () => this.startList() + this.getItemsPerPage();
 
   // elements which should to be shown
-  getVisibleList = () => this.getList().slice(this.startList(), this.endList());
+  getVisibleList = (): any[] => this.getList().slice(this.startList(), this.endList());
 
   getMax = () => this.getTotalPaginators() > this.getMaximumVisiblePaginators()
         ? this.getMaximumVisiblePaginators()
@@ -86,13 +92,13 @@ class Pagimagic extends Component {
 
   needToRenderArrows = () => this.getTotalPaginators() > this.getMax();
 
-  needToShowCounter = () => !!this.props.showCounter;
+  needToShowCounter = (): boolean => !!this.props.showCounter;
 
-  goTo = pageIndex => {
+  goTo = (pageIndex: number): void => {
     this.handleChangeCurrentPageIndex(pageIndex);
   };
 
-  onClickPrev = event => {
+  onClickPrev = (event: React.MouseEvent) => {
     event.preventDefault();
 
     if (this.getCurrentPage() > 0) {
@@ -100,7 +106,7 @@ class Pagimagic extends Component {
     }
   };
 
-  onClickNext = event => {
+  onClickNext = (event: React.MouseEvent) => {
     event.preventDefault();
 
     if (this.getCurrentPage() + 1 < this.getTotalPaginators()) {
@@ -108,23 +114,24 @@ class Pagimagic extends Component {
     }
   };
 
-  createIterator = currentPage => {
+  createIterator = (currentPage: number) => {
     const HALF = Math.floor(this.getMaximumVisiblePaginators() / 2);
     const TOTAL = this.getTotalPaginators();
     const VISIBLE = TOTAL > this.getMaximumVisiblePaginators() ? this.getMaximumVisiblePaginators() : TOTAL;
     const TO_RENDER = VISIBLE - 3;
     const HALF_TO_RENDER = TO_RENDER/2;
 
-    const make = condition => memo => el => {
+    // @ts-ignore
+    const make = (condition: boolean) => memo => el => {
       if (condition) memo.push(el);
     };
-    const makeFirst = (memo, i) => {
+    const makeFirst = (memo: number[], i: number) => {
       if (i === 0) memo.push(i);
     };
-    const makeEmpty = condition => memo => {
+    const makeEmpty = (condition: boolean)  => (memo: string[]) => {
       if (this.needToRenderArrows() && condition) memo.push('...');
     };
-    const makeLast = (memo, i) => {
+    const makeLast = (memo: number[], i: number) => {
       if (i + 1 === VISIBLE) memo.push(TOTAL - 1);
     };
 
@@ -134,16 +141,21 @@ class Pagimagic extends Component {
        */
       if (currentPage + HALF < VISIBLE) {
         make(i < VISIBLE - 1)(memo)(i);
+        // @ts-ignore
         makeEmpty(i >= VISIBLE - 1)(memo);
+        // @ts-ignore
         makeLast(memo, i);
       }
       /**
        * Stage 2 - when pagination starts moving
        */
       else if (currentPage + HALF === VISIBLE && VISIBLE !== TOTAL) {
+        // @ts-ignore
         makeFirst(memo, i);
         make(i !== 0 && i !== VISIBLE - 1)(memo)(i);
+        // @ts-ignore
         makeEmpty(i > HALF && i + 1 === VISIBLE)(memo);
+        // @ts-ignore
         makeLast(memo, i);
       }
       /**
@@ -152,10 +164,14 @@ class Pagimagic extends Component {
       else if (currentPage + HALF < TOTAL) {
         const el = (i + currentPage + HALF - VISIBLE + 1);
 
+        // @ts-ignore
         makeFirst(memo, i);
+        // @ts-ignore
         makeEmpty(el < currentPage - HALF_TO_RENDER)(memo);
         make(el >= currentPage - HALF_TO_RENDER && el <= currentPage + HALF_TO_RENDER)(memo)(el);
+        // @ts-ignore
         makeEmpty(el > currentPage + HALF_TO_RENDER && el !== TOTAL - 1)(memo);
+        // @ts-ignore
         makeLast(memo, i);
       }
       /**
@@ -165,7 +181,9 @@ class Pagimagic extends Component {
         const renderingAmount = TOTAL - VISIBLE;
         const el = renderingAmount + i;
 
+        // @ts-ignore
         makeFirst(memo, i);
+        // @ts-ignore
         makeEmpty(el <= renderingAmount)(memo);
         make(el > renderingAmount)(memo)(el);
       }
@@ -175,7 +193,9 @@ class Pagimagic extends Component {
       else {
         const el = TOTAL - VISIBLE + i;
 
+        // @ts-ignore
         makeFirst(memo, i);
+        // @ts-ignore
         makeEmpty(el < currentPage - VISIBLE + 2)(memo);
         make(el >= currentPage - VISIBLE + 2)(memo)(el);
       }
@@ -185,6 +205,7 @@ class Pagimagic extends Component {
   };
 
   render() {
+    console.log('johnny > this.props', this.props);
     const { renderChildren } = this.props;
 
     return (
@@ -238,7 +259,5 @@ class Pagimagic extends Component {
     );
   }
 }
-
-Pagimagic.propTypes = propTypes;
 
 export default Pagimagic;

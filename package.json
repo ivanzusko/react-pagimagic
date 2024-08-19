@@ -22,7 +22,9 @@
     "npm-package"
   ],
   "scripts": {
-    "prepublish": "npm run lint && babel --plugins transform-es2015-modules-umd src --ignore __tests__ --out-dir ./dist",
+    "clean": "rm -rf dist",
+    "prepublish": "npm run clean && tsc",
+    "prepublis-old": "npm run lint && babel --plugins transform-es2015-modules-umd src --ignore __tests__ --out-dir ./dist",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "test:watch": "jest --watch --coverage",
@@ -32,8 +34,12 @@
   "pre-commit": [
     "lint"
   ],
+  "main": "dist/index.js",
   "devDependencies": {
     "@testing-library/react": "^15.0.5",
+    "@types/node": "^22.4.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "babel-cli": "^6.6.4",
     "babel-core": "^6.7.4",
     "babel-eslint": "^6.0.2",
@@ -52,9 +58,9 @@
     "jsdom": "^8.1.0",
     "nodemon": "^1.9.1",
     "precommit-hook": "^3.0.0",
-    "prop-types": "^15.5.10",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.4"
   },
   "peerDependencies": {
     "react": "^18.3.1",

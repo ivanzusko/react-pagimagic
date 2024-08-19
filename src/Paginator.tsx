@@ -8,11 +8,17 @@ const Paginator = ({
   currentPage,
   goTo,
   useDefaultStyles,
+}: {
+  className?: string;
+  list: any;
+  currentPage: number;
+  goTo: (pageIndex: number) => void;
+  useDefaultStyles: any;
 }) => {
-  const defaultStyles = (pageIndex) => ({
+  const defaultStyles = (pageIndex: number) => ({
     display: 'inline-block',
     verticalAlign: 'middle',
-    lineHeight: '20px',
+    lineHeight: '40px',
     width: '40px',
     height: '40px',
     padding: '10px',
@@ -26,7 +32,8 @@ const Paginator = ({
   });
 
   return (
-    list.map((pageIndex, i) => {
+    //@ts-ignore
+    list.map((pageIndex, i: number) => {
       if (isNaN(pageIndex) && isNaN(list[i - 1])) return false;
       if (isNaN(pageIndex)) {
         return (

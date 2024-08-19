@@ -7,6 +7,11 @@ const Counter = ({
   from,
   listLength,
   all,
+} : {
+  className?: string;
+  from: any;
+  listLength: any;
+  all: any;
 }) => {
   const to = from + listLength - 1;
 

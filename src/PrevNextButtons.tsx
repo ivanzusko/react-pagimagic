@@ -3,7 +3,7 @@ import React from 'react';
 import glue from './glue';
 import DefaultArrow from './DefaultArrow';
 
-const PrevNextButtons = ({
+export default function PrevNextButtons({
   currentPage,
   totalPaginators,
   callbackFn,
@@ -11,9 +11,17 @@ const PrevNextButtons = ({
   useDefaultStyles,
   arrow,
   className,
-}) => {
+}: {
+  currentPage: any;
+  totalPaginators: any;
+  callbackFn: any;
+  direction?: 'next' | 'prev';
+  useDefaultStyles: any;
+  arrow: any;
+  className: any;
+}) {
   const forward = direction === 'next' ? 'next' : 'prev';
-  const disabled = direction => {
+  const disabled = (direction?: 'next' | 'prev') => {
     if (direction === 'next') {
       return currentPage + 1 === totalPaginators ? 'disabled' : '';
     }
@@ -63,5 +71,3 @@ const PrevNextButtons = ({
     </div>
   );
 };
-
-export default PrevNextButtons;

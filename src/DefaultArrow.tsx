@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DefaultArrow = ({ next }) => {
+const DefaultArrow = ({ next } : { next: boolean}) => {
   return (
     <span
       className="Pagimagic-nav-arrow"
