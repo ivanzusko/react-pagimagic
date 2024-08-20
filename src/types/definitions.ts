@@ -1,2 +1,2 @@
-export type PaginationIterator = (number|'...')[];
-export type PrevNext = 'next' | 'prev';
+export type PaginationIterator = Array<number | '...'>
+export type PrevNext = 'next' | 'prev'

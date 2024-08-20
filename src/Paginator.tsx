@@ -1,25 +1,25 @@
-import React from 'react';
-import glue from './glue';
-import { PaginationIterator } from './types/definitions';
+import React from 'react'
+import glue from './glue'
+import { PaginationIterator } from './types/definitions'
 
-export default function Paginator({
+export default function Paginator ({
   className,
   list,
   currentPage,
   goTo,
-  useDefaultStyles,
+  useDefaultStyles = false
 }: {
-  className?: string;
-  list: PaginationIterator;
-  currentPage: number;
-  goTo: (pageIndex: number) => void;
-  useDefaultStyles?: boolean;
-}) {
+  className?: string
+  list: PaginationIterator
+  currentPage: number
+  goTo: (pageIndex: number) => void
+  useDefaultStyles?: boolean
+}): Array<false | React.JSX.Element> {
   return (
     list.map((pageIndex, i: number) => {
       // check if it is '...'
       if (typeof pageIndex !== 'number') {
-        if (typeof list[i - 1] !== 'number') return false;
+        if (typeof list[i - 1] !== 'number') return false
 
         return (
           <span
@@ -33,7 +33,7 @@ export default function Paginator({
           >
             {pageIndex}
           </span>
-        );
+        )
       } else {
         return (
           <a
@@ -44,7 +44,7 @@ export default function Paginator({
                 : {}
             }
             onClick={() => {
-              goTo(pageIndex);
+              goTo(pageIndex)
             }}
             className={
               currentPage === pageIndex
@@ -54,13 +54,27 @@ export default function Paginator({
           >
             {pageIndex + 1}
           </a>
-        );
+        )
       }
     })
-  );
+  )
 };
 
-function getDefaultStyles(isActivePage: boolean) {
+function getDefaultStyles (isActivePage: boolean): {
+  display: 'inline-block'
+  verticalAlign: 'middle'
+  lineHeight: '40px'
+  width: '40px'
+  height: '40px'
+  padding: '10px'
+  border: 'solid 1px #000'
+  borderRadius: '3px'
+  textAlign: 'center'
+  margin: '0 5px'
+  backgroundColor: '#000' | '#fff'
+  color: '#fff' | '#000'
+  cursor: 'pointer'
+} {
   return {
     display: 'inline-block',
     verticalAlign: 'middle',
@@ -74,6 +88,6 @@ function getDefaultStyles(isActivePage: boolean) {
     margin: '0 5px',
     backgroundColor: isActivePage ? '#000' : '#fff',
     color: isActivePage ? '#fff' : '#000',
-    cursor: 'pointer',
+    cursor: 'pointer'
   }
 }

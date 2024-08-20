@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.0] - 2024-08-19
+### Added
+
+- Typescript support
+- `ts-standard`
+
+### Removed
+
+- Redundant dependencies: 
+  - `babel-cli`
+  - `babel-core`
+  - `babel-eslint`
+  - `babel-jest"`
+  - `babel-plugin-transform-es2015-modules-umd`
+  - `babel-polyfill`
+  - `babel-preset-es2015`
+  - `babel-preset-react`
+  - `babel-preset-stage-2`
+  - `babel-runtime`
+  - `eslint`
+  - `eslint-plugin-babel`
+  - `eslint-plugin-react`
+  - `git-validate`
+  - `jest"`
+  - `jsdom`
+  - `nodemon`
+  - `precommit-hook`
+
+
+---
+
 ## [2.0.0] - 2024-05-01
 ### Changed
 

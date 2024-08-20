@@ -1,11 +1,11 @@
-import React from 'react';
-import {render} from '@testing-library/react';
+import React from 'react'
+import { render } from '@testing-library/react'
 
-import Pagimagic from '../index';
+import Pagimagic from '../index'
 
 describe('Pagimagic', () => {
   describe('#render', () => {
-    const spyRenderFn = jest.fn();
+    const spyRenderFn = jest.fn()
 
     it('should render without crashing', () => {
       const props = {
@@ -16,12 +16,12 @@ describe('Pagimagic', () => {
         renderChildren: spyRenderFn,
         showCounter: true,
         className: 'test-classname'
-      };
-      const { getByText } = render(<Pagimagic {...props} />);
+      }
+      const { getByText } = render(<Pagimagic {...props} />)
 
-      expect(getByText('1')).toBeTruthy();
-      expect(getByText('2')).toBeTruthy();
-      expect(getByText('1-2 of 4')).toBeTruthy();
-    });
-  });
-});
+      expect(getByText('1')).toBeTruthy()
+      expect(getByText('2')).toBeTruthy()
+      expect(getByText('1-2 of 4')).toBeTruthy()
+    })
+  })
+})
