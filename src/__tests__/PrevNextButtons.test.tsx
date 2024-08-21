@@ -18,7 +18,7 @@ describe('PrevNextButtons', () => {
     }
     const { getByTestId } = render(<PrevNextButtons {...props} />)
 
-    const el = getByTestId('Pagimagic-nav-arrow-default')
+    const el = getByTestId('Pagimagic-nav-arrow-default--next')
 
     expect(el).toBeTruthy()
 

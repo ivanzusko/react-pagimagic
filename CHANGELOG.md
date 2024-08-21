@@ -13,13 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Typescript support
 - `ts-standard`
 
+### Fixed
+
+- Accessibility
+
 ### Removed
 
 - Redundant dependencies: 
   - `babel-cli`
   - `babel-core`
   - `babel-eslint`
-  - `babel-jest"`
+  - `babel-jest`
   - `babel-plugin-transform-es2015-modules-umd`
   - `babel-polyfill`
   - `babel-preset-es2015`
@@ -30,10 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `eslint-plugin-babel`
   - `eslint-plugin-react`
   - `git-validate`
-  - `jest"`
   - `jsdom`
   - `nodemon`
-  - `precommit-hook`
 
 
 ---

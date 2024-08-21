@@ -4,7 +4,7 @@ const DefaultArrow = ({ next }: { next: boolean }): JSX.Element => {
   return (
     <span
       className='Pagimagic-nav-arrow'
-      data-testid='Pagimagic-nav-arrow-default'
+      data-testid={`Pagimagic-nav-arrow-default--${next ? 'next' : 'prev'}`}
       style={{
         position: 'absolute',
         display: 'inline-block',

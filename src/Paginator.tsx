@@ -36,8 +36,9 @@ export default function Paginator ({
         )
       } else {
         return (
-          <a
+          <button
             key={pageIndex}
+            aria-label={`${currentPage === pageIndex ? 'current-' : ''}page-number-${pageIndex + 1}`}
             style={
               useDefaultStyles
                 ? getDefaultStyles(currentPage === pageIndex)
@@ -53,7 +54,7 @@ export default function Paginator ({
             }
           >
             {pageIndex + 1}
-          </a>
+          </button>
         )
       }
     })
@@ -63,7 +64,6 @@ export default function Paginator ({
 function getDefaultStyles (isActivePage: boolean): {
   display: 'inline-block'
   verticalAlign: 'middle'
-  lineHeight: '40px'
   width: '40px'
   height: '40px'
   padding: '10px'
@@ -74,11 +74,11 @@ function getDefaultStyles (isActivePage: boolean): {
   backgroundColor: '#000' | '#fff'
   color: '#fff' | '#000'
   cursor: 'pointer'
+  boxSizing: 'border-box'
 } {
   return {
     display: 'inline-block',
     verticalAlign: 'middle',
-    lineHeight: '40px',
     width: '40px',
     height: '40px',
     padding: '10px',
@@ -88,6 +88,7 @@ function getDefaultStyles (isActivePage: boolean): {
     margin: '0 5px',
     backgroundColor: isActivePage ? '#000' : '#fff',
     color: isActivePage ? '#fff' : '#000',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    boxSizing: 'border-box'
   }
 }

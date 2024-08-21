@@ -21,55 +21,63 @@ export default function PrevNextButtons ({
   className?: string
 }): JSX.Element {
   const forward = direction === 'next' ? 'next' : 'prev'
-  const disabled = (direction?: PrevNext): 'disabled' | '' => {
-    if (direction === 'next') {
-      return currentPage + 1 === totalPaginators ? 'disabled' : ''
-    }
-    return currentPage === 0 ? 'disabled' : ''
+  const isDisabled = disabledClassName(currentPage, totalPaginators, direction) === 'disabled'
+
+  const disableButtonStyles = {
+    border: 'none',
+    background: 'none'
   }
 
   return (
-    <div
+    <button
+      aria-label={`${forward}-page`}
       style={
         useDefaultStyles
           ? {
               display: 'inline-block',
               cursor:
-            disabled(direction) === 'disabled'
-              ? 'not-allowed'
-              : 'pointer',
+              isDisabled
+                ? 'not-allowed'
+                : 'pointer',
               position: 'relative',
               verticalAlign: 'middle',
               width: '50px',
               height: '50px',
-              opacity: disabled(direction) === 'disabled' ? '.3' : 1
+              opacity: isDisabled ? '.3' : 1,
+              ...disableButtonStyles
             }
           : {
               display: 'inline-block',
               cursor:
-            disabled(direction) === 'disabled' ? 'not-allowed' : 'pointer'
+              isDisabled ? 'not-allowed' : 'pointer',
+              ...disableButtonStyles
             }
       }
       className={
-        glue('Pagimagic', className)(['__nav-item', `__nav-item--${forward}`, `__nav-item--${disabled(direction)}`])
+        glue('Pagimagic', className)(['__nav-item', `__nav-item--${forward}`, `__nav-item--${disabledClassName(currentPage, totalPaginators, direction)}`])
       }
       onClick={e => {
         callbackFn(e)
       }}
     >
       {
-        (arrow != null) && typeof arrow === 'function'
+        (arrow != null)
           ? arrow()
           : useDefaultStyles
             ? <DefaultArrow next={forward === 'next'} />
-            : (arrow != null)
-                ? <span className={glue('Pagimagic', className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])} />
-                : (
-                  <span className={glue('Pagimagic', className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabled(direction)}`])} aria-hidden='true'>
-                    {forward}
-                  </span>
-                  )
+            : (
+              <span className={glue('Pagimagic', className)(['__nav-arrow', `__nav-arrow--${forward}`, `__nav-arrow--${disabledClassName(currentPage, totalPaginators, direction)}`])} aria-hidden='true'>
+                {forward}
+              </span>
+              )
       }
-    </div>
+    </button>
   )
 };
+
+function disabledClassName (currentPage: number, totalPaginators: number, direction?: PrevNext): 'disabled' | '' {
+  if (direction === 'next') {
+    return currentPage + 1 === totalPaginators ? 'disabled' : ''
+  }
+  return currentPage === 0 ? 'disabled' : ''
+}

@@ -5,7 +5,7 @@ import DefaultArrow from '../DefaultArrow'
 describe('DefaultArrow Component', () => {
   test('renders with default rotation when next is true', () => {
     const { getByTestId } = render(<DefaultArrow next />)
-    const arrowElement = getByTestId('Pagimagic-nav-arrow-default')
+    const arrowElement = getByTestId('Pagimagic-nav-arrow-default--next')
 
     expect(arrowElement).toBeInTheDocument()
     expect(arrowElement).toHaveStyle('transform: none')
@@ -13,7 +13,7 @@ describe('DefaultArrow Component', () => {
 
   test('renders with 180 degree rotation when next is false', () => {
     const { getByTestId } = render(<DefaultArrow next={false} />)
-    const arrowElement = getByTestId('Pagimagic-nav-arrow-default')
+    const arrowElement = getByTestId('Pagimagic-nav-arrow-default--prev')
 
     expect(arrowElement).toBeInTheDocument()
     expect(arrowElement).toHaveStyle('transform: rotate(-180deg)')
@@ -21,7 +21,7 @@ describe('DefaultArrow Component', () => {
 
   test('has correct dimensions and style', () => {
     const { getByTestId } = render(<DefaultArrow next />)
-    const arrowElement = getByTestId('Pagimagic-nav-arrow-default')
+    const arrowElement = getByTestId('Pagimagic-nav-arrow-default--next')
 
     expect(arrowElement).toHaveStyle({
       position: 'absolute',

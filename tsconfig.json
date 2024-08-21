@@ -13,6 +13,6 @@
     "moduleResolution": "bundler",
     "types": ["node", "@testing-library/jest-dom"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "jest.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
