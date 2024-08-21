@@ -1,16 +1,20 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-
 import Paginator from '../Paginator'
+import { PaginationIterator } from '../types/definitions'
 
 describe('Paginator', () => {
+  const spyFn = jest.fn()
+  const mockProps = {
+    className: 'test-classname',
+    list: [1, 2, 3, 4, 5, '...', 13] as PaginationIterator,
+    currentPage: 1,
+    goTo: spyFn
+  }
+
   it('should render without crashing', () => {
-    const spyFn = jest.fn()
     const props = {
-      className: 'test-classname',
-      list: [1, 2, 3, 4, 5, '...', 13],
-      currentPage: 1,
-      goTo: spyFn,
+      ...mockProps,
       useDefaultStyles: true
     }
     const { getByText } = render(<Paginator {...props} />)
@@ -30,10 +34,7 @@ describe('Paginator', () => {
 
   it('should render without default styles', () => {
     const props = {
-      className: 'test-classname',
-      list: [1, 2, 3, 4, 5, '...', 13],
-      currentPage: 1,
-      goTo: jest.fn(),
+      ...mockProps,
       useDefaultStyles: false
     }
     const { getByText } = render(<Paginator {...props} />)
